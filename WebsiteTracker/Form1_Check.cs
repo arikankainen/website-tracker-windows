@@ -97,6 +97,7 @@ namespace WebsiteTracker
                             item.Font = setUpdatedItemFont;
 
                             CheckSelectedActions();
+                            SaveList();
                             CreateNotification("Web page updated!", item.SubItems[ITEM_NAME].Text, item.SubItems[ITEM_ADDRESS].Text);
 
                             if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated!    " + logString);

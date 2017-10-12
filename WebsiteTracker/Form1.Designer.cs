@@ -58,6 +58,7 @@
             this.menuItem_StartAutomatically = new System.Windows.Forms.MenuItem();
             this.menuItem_StartMinimized = new System.Windows.Forms.MenuItem();
             this.menuItem_MinimizeToTray = new System.Windows.Forms.MenuItem();
+            this.menuItem_CloseToTray = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.menuItem_SaveLog = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -91,6 +92,13 @@
             this.menuItem9 = new System.Windows.Forms.MenuItem();
             this.menuItem_C_Open_Selected = new System.Windows.Forms.MenuItem();
             this.menuItem_C_Open_All = new System.Windows.Forms.MenuItem();
+            this.contextMenuTray = new System.Windows.Forms.ContextMenu();
+            this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
+            this.menuItem_T_CheckAll = new System.Windows.Forms.MenuItem();
+            this.menuItem_T_Open_All = new System.Windows.Forms.MenuItem();
+            this.menuItem19 = new System.Windows.Forms.MenuItem();
+            this.menuItem_T_Show = new System.Windows.Forms.MenuItem();
+            this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -235,6 +243,7 @@
             this.menuItem_StartAutomatically,
             this.menuItem_StartMinimized,
             this.menuItem_MinimizeToTray,
+            this.menuItem_CloseToTray,
             this.menuItem11,
             this.menuItem_SaveLog,
             this.menuItem15,
@@ -293,25 +302,31 @@
             this.menuItem_MinimizeToTray.Text = "Minimize to tray";
             this.menuItem_MinimizeToTray.Click += new System.EventHandler(this.menuItem_MinimizeToTray_Click);
             // 
+            // menuItem_CloseToTray
+            // 
+            this.menuItem_CloseToTray.Index = 9;
+            this.menuItem_CloseToTray.Text = "Close to tray";
+            this.menuItem_CloseToTray.Click += new System.EventHandler(this.menuItem_CloseToTray_Click);
+            // 
             // menuItem11
             // 
-            this.menuItem11.Index = 9;
+            this.menuItem11.Index = 10;
             this.menuItem11.Text = "-";
             // 
             // menuItem_SaveLog
             // 
-            this.menuItem_SaveLog.Index = 10;
+            this.menuItem_SaveLog.Index = 11;
             this.menuItem_SaveLog.Text = "Save log file";
             this.menuItem_SaveLog.Click += new System.EventHandler(this.menuItem_SaveLog_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 11;
+            this.menuItem15.Index = 12;
             this.menuItem15.Text = "-";
             // 
             // menuItem_SelectWebBrowser
             // 
-            this.menuItem_SelectWebBrowser.Index = 12;
+            this.menuItem_SelectWebBrowser.Index = 13;
             this.menuItem_SelectWebBrowser.Text = "Select web browser...";
             this.menuItem_SelectWebBrowser.Click += new System.EventHandler(this.menuItem_SelectWebBrowser_Click);
             // 
@@ -524,6 +539,50 @@
             this.menuItem_C_Open_All.Text = "Open all updated pages";
             this.menuItem_C_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
+            // contextMenuTray
+            // 
+            this.contextMenuTray.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_T_Show,
+            this.menuItem16,
+            this.menuItem_T_CheckAll,
+            this.menuItem_T_Open_All,
+            this.menuItem19,
+            this.menuItem_T_Exit});
+            // 
+            // menuItem_T_Exit
+            // 
+            this.menuItem_T_Exit.Index = 5;
+            this.menuItem_T_Exit.Text = "Exit";
+            this.menuItem_T_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
+            // 
+            // menuItem_T_CheckAll
+            // 
+            this.menuItem_T_CheckAll.Index = 2;
+            this.menuItem_T_CheckAll.Text = "Check all now";
+            this.menuItem_T_CheckAll.Click += new System.EventHandler(this.menuItem_CheckAll_Click);
+            // 
+            // menuItem_T_Open_All
+            // 
+            this.menuItem_T_Open_All.Index = 3;
+            this.menuItem_T_Open_All.Text = "Open all updated pages";
+            this.menuItem_T_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
+            // 
+            // menuItem19
+            // 
+            this.menuItem19.Index = 4;
+            this.menuItem19.Text = "-";
+            // 
+            // menuItem_T_Show
+            // 
+            this.menuItem_T_Show.Index = 0;
+            this.menuItem_T_Show.Text = "Show Website Tracker";
+            this.menuItem_T_Show.Click += new System.EventHandler(this.menuItem_Show);
+            // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 1;
+            this.menuItem16.Text = "-";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -610,6 +669,14 @@
         private System.Windows.Forms.MenuItem menuItem_C_Open_All;
         private System.Windows.Forms.MenuItem menuItem_SaveLog;
         private System.Windows.Forms.MenuItem menuItem15;
+        private System.Windows.Forms.MenuItem menuItem_CloseToTray;
+        private System.Windows.Forms.ContextMenu contextMenuTray;
+        private System.Windows.Forms.MenuItem menuItem_T_Exit;
+        private System.Windows.Forms.MenuItem menuItem_T_CheckAll;
+        private System.Windows.Forms.MenuItem menuItem_T_Open_All;
+        private System.Windows.Forms.MenuItem menuItem19;
+        private System.Windows.Forms.MenuItem menuItem_T_Show;
+        private System.Windows.Forms.MenuItem menuItem16;
     }
 }
 

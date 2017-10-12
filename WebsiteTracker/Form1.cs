@@ -37,6 +37,7 @@ namespace WebsiteTracker
         private bool sizeLoaded = false;
 
         private bool formClosing = false;
+        private bool formCloseNow = false;
 
         private const int DEFAULT_WIDTH = 1192;
         private const int DEFAULT_HEIGHT = 400;
@@ -56,6 +57,7 @@ namespace WebsiteTracker
         public Form1()
         {
             InitializeComponent();
+            notifyIcon1.ContextMenu = contextMenuTray;
         }
 
         private void LoadSettings()
@@ -76,6 +78,7 @@ namespace WebsiteTracker
             menuItem_StartAutomatically.Checked = settings.LoadSetting("StartAutomatically", "bool", "false");
             menuItem_StartMinimized.Checked = settings.LoadSetting("StartMinimized", "bool", "false");
             menuItem_MinimizeToTray.Checked = settings.LoadSetting("MinimizeToTray", "bool", "false");
+            menuItem_CloseToTray.Checked = settings.LoadSetting("CloseToTray", "bool", "false");
             menuItem_SaveLog.Checked = settings.LoadSetting("SaveLog", "bool", "false");
             setCustomBrowser = settings.LoadSetting("CustomBrowser");
             setUseCustomBrowser = settings.LoadSetting("UseCustomBrowser", "bool", "false");
@@ -182,6 +185,7 @@ namespace WebsiteTracker
             settings.SaveSetting("StartAutomatically", menuItem_StartAutomatically.Checked.ToString());
             settings.SaveSetting("StartMinimized", menuItem_StartMinimized.Checked.ToString());
             settings.SaveSetting("MinimizeToTray", menuItem_MinimizeToTray.Checked.ToString());
+            settings.SaveSetting("CloseToTray", menuItem_CloseToTray.Checked.ToString());
             settings.SaveSetting("SaveLog", menuItem_SaveLog.Checked.ToString());
             settings.SaveSetting("CustomBrowser", setCustomBrowser);
             settings.SaveSetting("UseCustomBrowser", setUseCustomBrowser.ToString());
@@ -365,16 +369,17 @@ namespace WebsiteTracker
                 menuItem_C_CheckSelected.Enabled = false;
             }
 
-            bool updated = false;
+            int updated = 0;
             foreach (ListViewItem item in lstItems.Items)
             {
-                if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor) updated = true;
+                if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor) updated++;
             }
 
-            if (updated)
+            if (updated > 0)
             {
                 menuItem_Open_All.Enabled = true;
                 menuItem_C_Open_All.Enabled = true;
+                menuItem_T_Open_All.Enabled = true;
                 notifyIcon1.Icon = Properties.Resources.wt_color;
             }
 
@@ -382,8 +387,16 @@ namespace WebsiteTracker
             {
                 menuItem_Open_All.Enabled = false;
                 menuItem_C_Open_All.Enabled = false;
+                menuItem_T_Open_All.Enabled = false;
                 notifyIcon1.Icon = Properties.Resources.wt_bw;
             }
+
+            string text;
+            if (updated == 0) text = "";
+            else if (updated == 1) text = " (1 page updated)";
+            else text = " (" + updated.ToString() + " pages updated)";
+
+            notifyIcon1.Text = "Website Tracker" + text;
         }
 
         private void HideWindow()
@@ -404,6 +417,8 @@ namespace WebsiteTracker
             item.ForeColor = setNormalItemColor;
             item.Font = setNormalItemFont;
             CheckSelectedActions();
+
+            SaveList();
         }
 
         private void OpenWebPage(string address)
@@ -443,11 +458,20 @@ namespace WebsiteTracker
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            formClosing = true;
-            timerCheckList.Stop();
-            CheckWindowSizeAndLocation();
-            SaveList();
-            SaveSettings();
+            if (formCloseNow || !menuItem_CloseToTray.Checked)
+            {
+                formClosing = true;
+                timerCheckList.Stop();
+                CheckWindowSizeAndLocation();
+                SaveList();
+                SaveSettings();
+            }
+
+            else
+            {
+                HideWindow();
+                e.Cancel = true;
+            }
         }
 
         private void Form1_LocationChanged(object sender, EventArgs e)
@@ -481,8 +505,11 @@ namespace WebsiteTracker
 
         private void notifyIcon1_MouseClick(object sender, MouseEventArgs e)
         {
-            ShowWindow();
-            ShowWindow();
+            if (e.Button == MouseButtons.Left)
+            {
+                ShowWindow();
+                ShowWindow();
+            }
         }
 
         private void notifyIcon1_BalloonTipClicked(object sender, EventArgs e)
@@ -500,11 +527,22 @@ namespace WebsiteTracker
         }
 
         /*************************************************************************/
+        // MENUITEMS : TRAY
+        /*************************************************************************/
+
+        private void menuItem_Show(object sender, EventArgs e)
+        {
+            ShowWindow();
+            ShowWindow();
+        }
+
+        /*************************************************************************/
         // MENUITEMS : FILE
         /*************************************************************************/
 
         private void menuItem_Exit_Click(object sender, EventArgs e)
         {
+            formCloseNow = true;
             this.Close();
         }
 
@@ -542,6 +580,7 @@ namespace WebsiteTracker
                 item.SubItems.Add("-");
 
                 lstItems.Items.Add(item);
+                SaveList();
             }
         }
 
@@ -575,6 +614,8 @@ namespace WebsiteTracker
                 }
 
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
+
+                SaveList();
             }
         }
 
@@ -589,6 +630,8 @@ namespace WebsiteTracker
 
                 if (result == DialogResult.Yes) lstItems.SelectedItems[0].Remove();
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
+
+                SaveList();
             }
         }
 
@@ -600,6 +643,7 @@ namespace WebsiteTracker
             }
 
             CheckSelectedActions();
+            SaveList();
         }
 
         private void menuItem_List_Disable_Click(object sender, EventArgs e)
@@ -610,6 +654,7 @@ namespace WebsiteTracker
             }
 
             CheckSelectedActions();
+            SaveList();
         }
 
         private void menuItem_Clear_Changed_Click(object sender, EventArgs e)
@@ -621,6 +666,7 @@ namespace WebsiteTracker
             }
 
             CheckSelectedActions();
+            SaveList();
         }
 
         private void menuItem_Open_Selected_Click(object sender, EventArgs e)
@@ -652,48 +698,63 @@ namespace WebsiteTracker
         {
             if (menuItem_RememberWindowSize.Checked) menuItem_RememberWindowSize.Checked = false;
             else menuItem_RememberWindowSize.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_RememberWindowPosition_Click(object sender, EventArgs e)
         {
             if (menuItem_RememberWindowPosition.Checked) menuItem_RememberWindowPosition.Checked = false;
             else menuItem_RememberWindowPosition.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_RememberColumnSizes_Click(object sender, EventArgs e)
         {
             if (menuItem_RememberColumnSizes.Checked) menuItem_RememberColumnSizes.Checked = false;
             else menuItem_RememberColumnSizes.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_ShowNotifications_Click(object sender, EventArgs e)
         {
             if (menuItem_ShowNotifications.Checked) menuItem_ShowNotifications.Checked = false;
             else menuItem_ShowNotifications.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_StartAutomatically_Click(object sender, EventArgs e)
         {
             if (menuItem_StartAutomatically.Checked) menuItem_StartAutomatically.Checked = false;
             else menuItem_StartAutomatically.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_StartMinimized_Click(object sender, EventArgs e)
         {
             if (menuItem_StartMinimized.Checked) menuItem_StartMinimized.Checked = false;
             else menuItem_StartMinimized.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_MinimizeToTray_Click(object sender, EventArgs e)
         {
             if (menuItem_MinimizeToTray.Checked) menuItem_MinimizeToTray.Checked = false;
             else menuItem_MinimizeToTray.Checked = true;
+            SaveSettings();
+        }
+
+        private void menuItem_CloseToTray_Click(object sender, EventArgs e)
+        {
+            if (menuItem_CloseToTray.Checked) menuItem_CloseToTray.Checked = false;
+            else menuItem_CloseToTray.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_SaveLog_Click(object sender, EventArgs e)
         {
             if (menuItem_SaveLog.Checked) menuItem_SaveLog.Checked = false;
             else menuItem_SaveLog.Checked = true;
+            SaveSettings();
         }
 
         private void menuItem_SelectWebBrowser_Click(object sender, EventArgs e)
@@ -707,6 +768,7 @@ namespace WebsiteTracker
             {
                 setUseCustomBrowser = form.UseCustom;
                 setCustomBrowser = form.SelectedBrowser;
+                SaveSettings();
             }
         }
 
