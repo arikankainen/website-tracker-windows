@@ -14,6 +14,7 @@ namespace WebsiteTracker
     {
         public static string GetResult(string content, string start, string stop)
         {
+            if (content == "Updating content...") return "";
             if (start == "") start = "^";
             if (stop == "") stop = "$";
 

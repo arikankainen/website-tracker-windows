@@ -87,7 +87,7 @@
             this.btnOk.Location = new System.Drawing.Point(588, 725);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(90, 23);
-            this.btnOk.TabIndex = 0;
+            this.btnOk.TabIndex = 4;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -98,7 +98,7 @@
             this.btnCancel.Location = new System.Drawing.Point(684, 725);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(90, 23);
-            this.btnCancel.TabIndex = 1;
+            this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
@@ -174,7 +174,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 114);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(762, 504);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Content";
             // 
@@ -211,7 +211,7 @@
             this.txtContent.Name = "txtContent";
             this.txtContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtContent.Size = new System.Drawing.Size(718, 173);
-            this.txtContent.TabIndex = 9;
+            this.txtContent.TabIndex = 0;
             this.txtContent.TextChanged += new System.EventHandler(this.control_ValueChanged);
             // 
             // label8
@@ -220,7 +220,7 @@
             this.label8.Location = new System.Drawing.Point(-2, 3);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(107, 13);
-            this.label8.TabIndex = 8;
+            this.label8.TabIndex = 1;
             this.label8.Text = "Original page source:";
             // 
             // txtResult
@@ -234,7 +234,7 @@
             this.txtResult.Name = "txtResult";
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtResult.Size = new System.Drawing.Size(718, 172);
-            this.txtResult.TabIndex = 10;
+            this.txtResult.TabIndex = 0;
             // 
             // label9
             // 
@@ -242,7 +242,7 @@
             this.label9.Location = new System.Drawing.Point(-2, 3);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(106, 13);
-            this.label9.TabIndex = 9;
+            this.label9.TabIndex = 1;
             this.label9.Text = "Filtered page source:";
             // 
             // btnUseStop
@@ -319,7 +319,7 @@
             this.groupBox3.Location = new System.Drawing.Point(12, 624);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(762, 91);
-            this.groupBox3.TabIndex = 4;
+            this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Check interval";
             // 
@@ -331,7 +331,7 @@
             this.checkAutomatic.Location = new System.Drawing.Point(22, 41);
             this.checkAutomatic.Name = "checkAutomatic";
             this.checkAutomatic.Size = new System.Drawing.Size(155, 17);
-            this.checkAutomatic.TabIndex = 6;
+            this.checkAutomatic.TabIndex = 0;
             this.checkAutomatic.Text = "Enable automatic checking";
             this.checkAutomatic.UseVisualStyleBackColor = true;
             // 
@@ -372,7 +372,7 @@
             0});
             this.numericMinutes.Name = "numericMinutes";
             this.numericMinutes.Size = new System.Drawing.Size(60, 20);
-            this.numericMinutes.TabIndex = 2;
+            this.numericMinutes.TabIndex = 3;
             this.numericMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericMinutes.Value = new decimal(new int[] {
             1,
@@ -391,7 +391,7 @@
             0});
             this.numericHours.Name = "numericHours";
             this.numericHours.Size = new System.Drawing.Size(60, 20);
-            this.numericHours.TabIndex = 1;
+            this.numericHours.TabIndex = 2;
             this.numericHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericHours.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
@@ -405,7 +405,7 @@
             0});
             this.numericDays.Name = "numericDays";
             this.numericDays.Size = new System.Drawing.Size(60, 20);
-            this.numericDays.TabIndex = 0;
+            this.numericDays.TabIndex = 1;
             this.numericDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericDays.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
@@ -416,7 +416,7 @@
             this.labelChecksum.Location = new System.Drawing.Point(31, 730);
             this.labelChecksum.Name = "labelChecksum";
             this.labelChecksum.Size = new System.Drawing.Size(60, 13);
-            this.labelChecksum.TabIndex = 6;
+            this.labelChecksum.TabIndex = 1;
             this.labelChecksum.Text = "Checksum:";
             // 
             // FormItem

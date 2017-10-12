@@ -45,6 +45,9 @@
             this.menuItem_List_Disable = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem_Clear_Changed = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.menuItem_Open_Selected = new System.Windows.Forms.MenuItem();
+            this.menuItem_Open_All = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberWindowSize = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberWindowPosition = new System.Windows.Forms.MenuItem();
@@ -56,6 +59,8 @@
             this.menuItem_StartMinimized = new System.Windows.Forms.MenuItem();
             this.menuItem_MinimizeToTray = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.menuItem_SaveLog = new System.Windows.Forms.MenuItem();
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.menuItem_SelectWebBrowser = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem_Help = new System.Windows.Forms.MenuItem();
@@ -83,6 +88,9 @@
             this.menuItem_C_List_Disable = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.menuItem_C_Clear_Changed = new System.Windows.Forms.MenuItem();
+            this.menuItem9 = new System.Windows.Forms.MenuItem();
+            this.menuItem_C_Open_Selected = new System.Windows.Forms.MenuItem();
+            this.menuItem_C_Open_All = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -120,7 +128,10 @@
             this.menuItem_List_Enable,
             this.menuItem_List_Disable,
             this.menuItem1,
-            this.menuItem_Clear_Changed});
+            this.menuItem_Clear_Changed,
+            this.menuItem14,
+            this.menuItem_Open_Selected,
+            this.menuItem_Open_All});
             this.menuItem2.Text = "List";
             // 
             // menuItem_CheckSelected
@@ -189,8 +200,27 @@
             // 
             this.menuItem_Clear_Changed.Enabled = false;
             this.menuItem_Clear_Changed.Index = 10;
-            this.menuItem_Clear_Changed.Text = "Clear changed status";
+            this.menuItem_Clear_Changed.Text = "Clear \"updated\" status";
             this.menuItem_Clear_Changed.Click += new System.EventHandler(this.menuItem_Clear_Changed_Click);
+            // 
+            // menuItem14
+            // 
+            this.menuItem14.Index = 11;
+            this.menuItem14.Text = "-";
+            // 
+            // menuItem_Open_Selected
+            // 
+            this.menuItem_Open_Selected.Enabled = false;
+            this.menuItem_Open_Selected.Index = 12;
+            this.menuItem_Open_Selected.Text = "Open selected page";
+            this.menuItem_Open_Selected.Click += new System.EventHandler(this.menuItem_Open_Selected_Click);
+            // 
+            // menuItem_Open_All
+            // 
+            this.menuItem_Open_All.Enabled = false;
+            this.menuItem_Open_All.Index = 13;
+            this.menuItem_Open_All.Text = "Open all updated pages";
+            this.menuItem_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
             // menuItem3
             // 
@@ -206,6 +236,8 @@
             this.menuItem_StartMinimized,
             this.menuItem_MinimizeToTray,
             this.menuItem11,
+            this.menuItem_SaveLog,
+            this.menuItem15,
             this.menuItem_SelectWebBrowser});
             this.menuItem3.Text = "Settings";
             // 
@@ -266,9 +298,20 @@
             this.menuItem11.Index = 9;
             this.menuItem11.Text = "-";
             // 
+            // menuItem_SaveLog
+            // 
+            this.menuItem_SaveLog.Index = 10;
+            this.menuItem_SaveLog.Text = "Save log file";
+            this.menuItem_SaveLog.Click += new System.EventHandler(this.menuItem_SaveLog_Click);
+            // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 11;
+            this.menuItem15.Text = "-";
+            // 
             // menuItem_SelectWebBrowser
             // 
-            this.menuItem_SelectWebBrowser.Index = 10;
+            this.menuItem_SelectWebBrowser.Index = 12;
             this.menuItem_SelectWebBrowser.Text = "Select web browser...";
             this.menuItem_SelectWebBrowser.Click += new System.EventHandler(this.menuItem_SelectWebBrowser_Click);
             // 
@@ -301,7 +344,7 @@
             // notifyIcon1
             // 
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
-            this.notifyIcon1.Text = "PageMonitor";
+            this.notifyIcon1.Text = "Website Tracker";
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.notifyIcon1_BalloonTipClicked);
             this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
@@ -388,7 +431,10 @@
             this.menuItem_C_List_Enable,
             this.menuItem_C_List_Disable,
             this.menuItem20,
-            this.menuItem_C_Clear_Changed});
+            this.menuItem_C_Clear_Changed,
+            this.menuItem9,
+            this.menuItem_C_Open_Selected,
+            this.menuItem_C_Open_All});
             // 
             // menuItem_C_CheckSelected
             // 
@@ -456,8 +502,27 @@
             // 
             this.menuItem_C_Clear_Changed.Enabled = false;
             this.menuItem_C_Clear_Changed.Index = 10;
-            this.menuItem_C_Clear_Changed.Text = "Clear changed status";
+            this.menuItem_C_Clear_Changed.Text = "Clear \"updated\" status";
             this.menuItem_C_Clear_Changed.Click += new System.EventHandler(this.menuItem_Clear_Changed_Click);
+            // 
+            // menuItem9
+            // 
+            this.menuItem9.Index = 11;
+            this.menuItem9.Text = "-";
+            // 
+            // menuItem_C_Open_Selected
+            // 
+            this.menuItem_C_Open_Selected.Enabled = false;
+            this.menuItem_C_Open_Selected.Index = 12;
+            this.menuItem_C_Open_Selected.Text = "Open selected page";
+            this.menuItem_C_Open_Selected.Click += new System.EventHandler(this.menuItem_Open_Selected_Click);
+            // 
+            // menuItem_C_Open_All
+            // 
+            this.menuItem_C_Open_All.Enabled = false;
+            this.menuItem_C_Open_All.Index = 13;
+            this.menuItem_C_Open_All.Text = "Open all updated pages";
+            this.menuItem_C_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
             // Form1
             // 
@@ -537,6 +602,14 @@
         private System.Windows.Forms.MenuItem menuItem_C_List_Disable;
         private System.Windows.Forms.MenuItem menuItem20;
         private System.Windows.Forms.MenuItem menuItem_C_Clear_Changed;
+        private System.Windows.Forms.MenuItem menuItem14;
+        private System.Windows.Forms.MenuItem menuItem_Open_Selected;
+        private System.Windows.Forms.MenuItem menuItem_Open_All;
+        private System.Windows.Forms.MenuItem menuItem9;
+        private System.Windows.Forms.MenuItem menuItem_C_Open_Selected;
+        private System.Windows.Forms.MenuItem menuItem_C_Open_All;
+        private System.Windows.Forms.MenuItem menuItem_SaveLog;
+        private System.Windows.Forms.MenuItem menuItem15;
     }
 }
 

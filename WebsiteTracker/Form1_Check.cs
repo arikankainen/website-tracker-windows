@@ -86,7 +86,6 @@ namespace WebsiteTracker
             {
                 if (!formClosing)
                 {
-                    File.AppendAllText(logFile, logString);
                     item.SubItems[ITEM_LAST].Text = DateTime.Now.ToString(dateString);
 
                     if (item.SubItems[ITEM_CHECKSUM].Text != "-")
@@ -99,7 +98,11 @@ namespace WebsiteTracker
 
                             CheckSelectedActions();
                             CreateNotification("Web page updated!", item.SubItems[ITEM_NAME].Text, item.SubItems[ITEM_ADDRESS].Text);
+
+                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated!    " + logString);
                         }
+
+                        else if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated " + logString);
                     }
 
                     CheckSelectedActions();

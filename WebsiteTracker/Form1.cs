@@ -76,6 +76,7 @@ namespace WebsiteTracker
             menuItem_StartAutomatically.Checked = settings.LoadSetting("StartAutomatically", "bool", "false");
             menuItem_StartMinimized.Checked = settings.LoadSetting("StartMinimized", "bool", "false");
             menuItem_MinimizeToTray.Checked = settings.LoadSetting("MinimizeToTray", "bool", "false");
+            menuItem_SaveLog.Checked = settings.LoadSetting("SaveLog", "bool", "false");
             setCustomBrowser = settings.LoadSetting("CustomBrowser");
             setUseCustomBrowser = settings.LoadSetting("UseCustomBrowser", "bool", "false");
 
@@ -181,6 +182,7 @@ namespace WebsiteTracker
             settings.SaveSetting("StartAutomatically", menuItem_StartAutomatically.Checked.ToString());
             settings.SaveSetting("StartMinimized", menuItem_StartMinimized.Checked.ToString());
             settings.SaveSetting("MinimizeToTray", menuItem_MinimizeToTray.Checked.ToString());
+            settings.SaveSetting("SaveLog", menuItem_SaveLog.Checked.ToString());
             settings.SaveSetting("CustomBrowser", setCustomBrowser);
             settings.SaveSetting("UseCustomBrowser", setUseCustomBrowser.ToString());
 
@@ -297,9 +299,11 @@ namespace WebsiteTracker
                     menuItem_List_Delete.Enabled = true;
                     menuItem_List_Modify.Enabled = true;
                     menuItem_CheckSelected.Enabled = true;
+                    menuItem_Open_Selected.Enabled = true;
                     menuItem_C_List_Delete.Enabled = true;
                     menuItem_C_List_Modify.Enabled = true;
                     menuItem_C_CheckSelected.Enabled = true;
+                    menuItem_C_Open_Selected.Enabled = true;
 
                     if (lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text != "")
                     {
@@ -337,11 +341,13 @@ namespace WebsiteTracker
                     menuItem_List_Enable.Enabled = false;
                     menuItem_List_Disable.Enabled = false;
                     menuItem_CheckSelected.Enabled = false;
+                    menuItem_Open_Selected.Enabled = false;
                     menuItem_C_List_Delete.Enabled = false;
                     menuItem_C_List_Modify.Enabled = false;
                     menuItem_C_List_Enable.Enabled = false;
                     menuItem_C_List_Disable.Enabled = false;
                     menuItem_C_CheckSelected.Enabled = false;
+                    menuItem_C_Open_Selected.Enabled = false;
                 }
             }
 
@@ -365,8 +371,19 @@ namespace WebsiteTracker
                 if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor) updated = true;
             }
 
-            if (updated) notifyIcon1.Icon = Properties.Resources.wt_color;
-            else notifyIcon1.Icon = Properties.Resources.wt_bw;
+            if (updated)
+            {
+                menuItem_Open_All.Enabled = true;
+                menuItem_C_Open_All.Enabled = true;
+                notifyIcon1.Icon = Properties.Resources.wt_color;
+            }
+
+            else
+            {
+                menuItem_Open_All.Enabled = false;
+                menuItem_C_Open_All.Enabled = false;
+                notifyIcon1.Icon = Properties.Resources.wt_bw;
+            }
         }
 
         private void HideWindow()
@@ -380,6 +397,30 @@ namespace WebsiteTracker
             if (maximized) this.WindowState = FormWindowState.Maximized;
             else this.WindowState = FormWindowState.Normal;
             this.Activate();
+        }
+
+        private void ClearNewStatus(ListViewItem item)
+        {
+            item.ForeColor = setNormalItemColor;
+            item.Font = setNormalItemFont;
+            CheckSelectedActions();
+        }
+
+        private void OpenWebPage(string address)
+        {
+            if (setUseCustomBrowser && File.Exists(setCustomBrowser))
+            {
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.FileName = setCustomBrowser;
+                startInfo.Arguments = address;
+
+                Process process = Process.Start(startInfo);
+            }
+
+            else
+            {
+                Process.Start(address);
+            }
         }
 
         /*************************************************************************/
@@ -433,28 +474,8 @@ namespace WebsiteTracker
         {
             if (lstItems.SelectedItems.Count > 0)
             {
-                lstItems.SelectedItems[0].ForeColor = setNormalItemColor;
-                lstItems.SelectedItems[0].Font = setNormalItemFont;
-                CheckSelectedActions();
-
+                ClearNewStatus(lstItems.SelectedItems[0]);
                 OpenWebPage(lstItems.SelectedItems[0].SubItems[ITEM_ADDRESS].Text);
-            }
-        }
-
-        private void OpenWebPage(string address)
-        {
-            if (setUseCustomBrowser && File.Exists(setCustomBrowser))
-            {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = setCustomBrowser;
-                startInfo.Arguments = address;
-
-                Process process = Process.Start(startInfo);
-            }
-
-            else
-            {
-                Process.Start(address);
             }
         }
 
@@ -602,6 +623,27 @@ namespace WebsiteTracker
             CheckSelectedActions();
         }
 
+        private void menuItem_Open_Selected_Click(object sender, EventArgs e)
+        {
+            if (lstItems.SelectedItems.Count > 0)
+            {
+                ClearNewStatus(lstItems.SelectedItems[0]);
+                OpenWebPage(lstItems.SelectedItems[0].SubItems[ITEM_ADDRESS].Text);
+            }
+        }
+
+        private void menuItem_Open_All_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in lstItems.Items)
+            {
+                if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor)
+                {
+                    ClearNewStatus(item);
+                    OpenWebPage(item.SubItems[ITEM_ADDRESS].Text);
+                }
+            }
+        }
+
         /*************************************************************************/
         // MENUITEMS : SETTINGS
         /*************************************************************************/
@@ -646,6 +688,12 @@ namespace WebsiteTracker
         {
             if (menuItem_MinimizeToTray.Checked) menuItem_MinimizeToTray.Checked = false;
             else menuItem_MinimizeToTray.Checked = true;
+        }
+
+        private void menuItem_SaveLog_Click(object sender, EventArgs e)
+        {
+            if (menuItem_SaveLog.Checked) menuItem_SaveLog.Checked = false;
+            else menuItem_SaveLog.Checked = true;
         }
 
         private void menuItem_SelectWebBrowser_Click(object sender, EventArgs e)
