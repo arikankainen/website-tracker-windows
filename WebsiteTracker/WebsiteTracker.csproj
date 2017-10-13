@@ -113,6 +113,12 @@
   <ItemGroup>
     <None Include="Resources\wt_bw.ico" />
     <None Include="Resources\wt_color.ico" />
+    <None Include="Resources\enabled.ico" />
+    <None Include="Resources\disabled.ico" />
+    <None Include="Resources\disabled_bw.ico" />
+    <None Include="Resources\disabled_color.ico" />
+    <None Include="Resources\enabled_bw.ico" />
+    <None Include="Resources\enabled_color.ico" />
     <Content Include="wt_color.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

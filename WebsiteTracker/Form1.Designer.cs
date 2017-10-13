@@ -31,9 +31,9 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem_File = new System.Windows.Forms.MenuItem();
             this.menuItem_Exit = new System.Windows.Forms.MenuItem();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem_List = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckSelected = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckAll = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
@@ -48,7 +48,7 @@
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.menuItem_Open_Selected = new System.Windows.Forms.MenuItem();
             this.menuItem_Open_All = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem_Settings = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberWindowSize = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberWindowPosition = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberColumnSizes = new System.Windows.Forms.MenuItem();
@@ -63,9 +63,21 @@
             this.menuItem_SaveLog = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.menuItem_SelectWebBrowser = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem_Font_Normal = new System.Windows.Forms.MenuItem();
+            this.menuItem_Font_Updated = new System.Windows.Forms.MenuItem();
+            this.menuItem21 = new System.Windows.Forms.MenuItem();
+            this.menuItem_Color_Normal = new System.Windows.Forms.MenuItem();
+            this.menuItem_Color_Updated = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem_Help = new System.Windows.Forms.MenuItem();
             this.statusBar1 = new System.Windows.Forms.StatusBar();
+            this.statusUpdatedItems = new System.Windows.Forms.StatusBarPanel();
+            this.statusEnabledItems = new System.Windows.Forms.StatusBarPanel();
+            this.statusDisabledItems = new System.Windows.Forms.StatusBarPanel();
+            this.statusDummy = new System.Windows.Forms.StatusBarPanel();
+            this.statusLastChecked = new System.Windows.Forms.StatusBarPanel();
             this.timerCheckList = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.lstItems = new WebsiteTracker.VisualStylesListView();
@@ -77,6 +89,7 @@
             this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageListGlobe = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu1 = new System.Windows.Forms.ContextMenu();
             this.menuItem_C_CheckSelected = new System.Windows.Forms.MenuItem();
             this.menuItem_C_CheckAll = new System.Windows.Forms.MenuItem();
@@ -93,28 +106,33 @@
             this.menuItem_C_Open_Selected = new System.Windows.Forms.MenuItem();
             this.menuItem_C_Open_All = new System.Windows.Forms.MenuItem();
             this.contextMenuTray = new System.Windows.Forms.ContextMenu();
-            this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
+            this.menuItem_T_Show = new System.Windows.Forms.MenuItem();
+            this.menuItem16 = new System.Windows.Forms.MenuItem();
             this.menuItem_T_CheckAll = new System.Windows.Forms.MenuItem();
             this.menuItem_T_Open_All = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
-            this.menuItem_T_Show = new System.Windows.Forms.MenuItem();
-            this.menuItem16 = new System.Windows.Forms.MenuItem();
+            this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
+            ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusLastChecked)).BeginInit();
             this.SuspendLayout();
             // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem4,
-            this.menuItem2,
-            this.menuItem3,
+            this.menuItem_File,
+            this.menuItem_List,
+            this.menuItem_Settings,
             this.menuItem6});
             // 
-            // menuItem4
+            // menuItem_File
             // 
-            this.menuItem4.Index = 0;
-            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_File.Index = 0;
+            this.menuItem_File.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Exit});
-            this.menuItem4.Text = "File";
+            this.menuItem_File.Text = "File";
             // 
             // menuItem_Exit
             // 
@@ -122,10 +140,10 @@
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
-            // menuItem2
+            // menuItem_List
             // 
-            this.menuItem2.Index = 1;
-            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_List.Index = 1;
+            this.menuItem_List.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_CheckSelected,
             this.menuItem_CheckAll,
             this.menuItem5,
@@ -140,7 +158,7 @@
             this.menuItem14,
             this.menuItem_Open_Selected,
             this.menuItem_Open_All});
-            this.menuItem2.Text = "List";
+            this.menuItem_List.Text = "List";
             // 
             // menuItem_CheckSelected
             // 
@@ -230,10 +248,10 @@
             this.menuItem_Open_All.Text = "Open all updated pages";
             this.menuItem_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
-            // menuItem3
+            // menuItem_Settings
             // 
-            this.menuItem3.Index = 2;
-            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_Settings.Index = 2;
+            this.menuItem_Settings.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_RememberWindowSize,
             this.menuItem_RememberWindowPosition,
             this.menuItem_RememberColumnSizes,
@@ -247,8 +265,11 @@
             this.menuItem11,
             this.menuItem_SaveLog,
             this.menuItem15,
-            this.menuItem_SelectWebBrowser});
-            this.menuItem3.Text = "Settings";
+            this.menuItem_SelectWebBrowser,
+            this.menuItem3,
+            this.menuItem4,
+            this.menuItem21});
+            this.menuItem_Settings.Text = "Settings";
             // 
             // menuItem_RememberWindowSize
             // 
@@ -330,6 +351,51 @@
             this.menuItem_SelectWebBrowser.Text = "Select web browser...";
             this.menuItem_SelectWebBrowser.Click += new System.EventHandler(this.menuItem_SelectWebBrowser_Click);
             // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 14;
+            this.menuItem3.Text = "-";
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 15;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_Font_Normal,
+            this.menuItem_Font_Updated});
+            this.menuItem4.Text = "Set font";
+            // 
+            // menuItem_Font_Normal
+            // 
+            this.menuItem_Font_Normal.Index = 0;
+            this.menuItem_Font_Normal.Text = "For normal items...";
+            this.menuItem_Font_Normal.Click += new System.EventHandler(this.menuItem_Font_Normal_Click);
+            // 
+            // menuItem_Font_Updated
+            // 
+            this.menuItem_Font_Updated.Index = 1;
+            this.menuItem_Font_Updated.Text = "For updated items...";
+            this.menuItem_Font_Updated.Click += new System.EventHandler(this.menuItem_Font_Updated_Click);
+            // 
+            // menuItem21
+            // 
+            this.menuItem21.Index = 16;
+            this.menuItem21.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem_Color_Normal,
+            this.menuItem_Color_Updated});
+            this.menuItem21.Text = "Set color";
+            // 
+            // menuItem_Color_Normal
+            // 
+            this.menuItem_Color_Normal.Index = 0;
+            this.menuItem_Color_Normal.Text = "For normal items...";
+            this.menuItem_Color_Normal.Click += new System.EventHandler(this.menuItem_Color_Normal_Click);
+            // 
+            // menuItem_Color_Updated
+            // 
+            this.menuItem_Color_Updated.Index = 1;
+            this.menuItem_Color_Updated.Text = "For updated items...";
+            this.menuItem_Color_Updated.Click += new System.EventHandler(this.menuItem_Color_Updated_Click);
+            // 
             // menuItem6
             // 
             this.menuItem6.Index = 3;
@@ -347,8 +413,57 @@
             // 
             this.statusBar1.Location = new System.Drawing.Point(0, 276);
             this.statusBar1.Name = "statusBar1";
+            this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
+            this.statusUpdatedItems,
+            this.statusEnabledItems,
+            this.statusDisabledItems,
+            this.statusDummy,
+            this.statusLastChecked});
+            this.statusBar1.ShowPanels = true;
             this.statusBar1.Size = new System.Drawing.Size(1104, 22);
             this.statusBar1.TabIndex = 1;
+            // 
+            // statusUpdatedItems
+            // 
+            this.statusUpdatedItems.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.statusUpdatedItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusUpdatedItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusUpdatedItems.Name = "statusUpdatedItems";
+            this.statusUpdatedItems.Text = "Updated items: 0";
+            // 
+            // statusEnabledItems
+            // 
+            this.statusEnabledItems.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.statusEnabledItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusEnabledItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusEnabledItems.Name = "statusEnabledItems";
+            this.statusEnabledItems.Text = "Enabled items: 0";
+            this.statusEnabledItems.Width = 98;
+            // 
+            // statusDisabledItems
+            // 
+            this.statusDisabledItems.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.statusDisabledItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusDisabledItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusDisabledItems.Name = "statusDisabledItems";
+            this.statusDisabledItems.Text = "Disabled items: 0";
+            this.statusDisabledItems.Width = 101;
+            // 
+            // statusDummy
+            // 
+            this.statusDummy.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
+            this.statusDummy.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusDummy.Name = "statusDummy";
+            this.statusDummy.Width = 697;
+            // 
+            // statusLastChecked
+            // 
+            this.statusLastChecked.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
+            this.statusLastChecked.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusLastChecked.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusLastChecked.Name = "statusLastChecked";
+            this.statusLastChecked.Text = "Last checked: -";
+            this.statusLastChecked.Width = 91;
             // 
             // timerCheckList
             // 
@@ -378,12 +493,14 @@
             this.clmContentStop,
             this.clmChecksum,
             this.clmLastChecked});
-            this.lstItems.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
+            this.lstItems.HideSelection = false;
             this.lstItems.Location = new System.Drawing.Point(12, 12);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
             this.lstItems.Size = new System.Drawing.Size(1080, 252);
+            this.lstItems.SmallImageList = this.imageListGlobe;
             this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstItems.TabIndex = 0;
             this.lstItems.UseCompatibleStateImageBehavior = false;
@@ -432,6 +549,16 @@
             // 
             this.clmLastChecked.Text = "Last checked";
             this.clmLastChecked.Width = 126;
+            // 
+            // imageListGlobe
+            // 
+            this.imageListGlobe.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListGlobe.ImageStream")));
+            this.imageListGlobe.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageListGlobe.Images.SetKeyName(0, "updated_bw_light");
+            this.imageListGlobe.Images.SetKeyName(1, "updated_bw");
+            this.imageListGlobe.Images.SetKeyName(2, "updated_color");
+            this.imageListGlobe.Images.SetKeyName(3, "disabled_color");
+            this.imageListGlobe.Images.SetKeyName(4, "enabled_color");
             // 
             // contextMenu1
             // 
@@ -549,11 +676,16 @@
             this.menuItem19,
             this.menuItem_T_Exit});
             // 
-            // menuItem_T_Exit
+            // menuItem_T_Show
             // 
-            this.menuItem_T_Exit.Index = 5;
-            this.menuItem_T_Exit.Text = "Exit";
-            this.menuItem_T_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
+            this.menuItem_T_Show.Index = 0;
+            this.menuItem_T_Show.Text = "Show Website Tracker";
+            this.menuItem_T_Show.Click += new System.EventHandler(this.menuItem_Show);
+            // 
+            // menuItem16
+            // 
+            this.menuItem16.Index = 1;
+            this.menuItem16.Text = "-";
             // 
             // menuItem_T_CheckAll
             // 
@@ -572,16 +704,11 @@
             this.menuItem19.Index = 4;
             this.menuItem19.Text = "-";
             // 
-            // menuItem_T_Show
+            // menuItem_T_Exit
             // 
-            this.menuItem_T_Show.Index = 0;
-            this.menuItem_T_Show.Text = "Show Website Tracker";
-            this.menuItem_T_Show.Click += new System.EventHandler(this.menuItem_Show);
-            // 
-            // menuItem16
-            // 
-            this.menuItem16.Index = 1;
-            this.menuItem16.Text = "-";
+            this.menuItem_T_Exit.Index = 5;
+            this.menuItem_T_Exit.Text = "Exit";
+            this.menuItem_T_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
             // Form1
             // 
@@ -602,6 +729,11 @@
             this.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Form1_Layout);
+            ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusLastChecked)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -610,7 +742,7 @@
 
         private VisualStylesListView lstItems;
         private System.Windows.Forms.MainMenu mainMenu1;
-        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem_List;
         private System.Windows.Forms.StatusBar statusBar1;
         private System.Windows.Forms.ColumnHeader clmName;
         private System.Windows.Forms.ColumnHeader clmAddress;
@@ -630,7 +762,7 @@
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem_Clear_Changed;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem_Settings;
         private System.Windows.Forms.MenuItem menuItem_RememberWindowSize;
         private System.Windows.Forms.MenuItem menuItem_RememberWindowPosition;
         private System.Windows.Forms.MenuItem menuItem_RememberColumnSizes;
@@ -640,7 +772,7 @@
         private System.Windows.Forms.MenuItem menuItem_SelectWebBrowser;
         private System.Windows.Forms.MenuItem menuItem6;
         private System.Windows.Forms.MenuItem menuItem_Help;
-        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem menuItem_File;
         private System.Windows.Forms.MenuItem menuItem_Exit;
         private System.Windows.Forms.MenuItem menuItem_ShowNotifications;
         private System.Windows.Forms.MenuItem menuItem8;
@@ -677,6 +809,19 @@
         private System.Windows.Forms.MenuItem menuItem19;
         private System.Windows.Forms.MenuItem menuItem_T_Show;
         private System.Windows.Forms.MenuItem menuItem16;
+        private System.Windows.Forms.StatusBarPanel statusEnabledItems;
+        private System.Windows.Forms.StatusBarPanel statusUpdatedItems;
+        private System.Windows.Forms.StatusBarPanel statusDisabledItems;
+        private System.Windows.Forms.StatusBarPanel statusDummy;
+        private System.Windows.Forms.StatusBarPanel statusLastChecked;
+        private System.Windows.Forms.ImageList imageListGlobe;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem menuItem_Font_Normal;
+        private System.Windows.Forms.MenuItem menuItem_Font_Updated;
+        private System.Windows.Forms.MenuItem menuItem21;
+        private System.Windows.Forms.MenuItem menuItem_Color_Normal;
+        private System.Windows.Forms.MenuItem menuItem_Color_Updated;
     }
 }
 

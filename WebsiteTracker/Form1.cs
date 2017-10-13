@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace WebsiteTracker
@@ -28,6 +29,7 @@ namespace WebsiteTracker
         private const int ITEM_CHANGED = 8;
 
         private const string TEXT_CHECKING = "Checking...";
+        private const string TEXT_CONNECTION_ERROR = "Failed to connect";
 
         private int width;
         private int height;
@@ -44,20 +46,39 @@ namespace WebsiteTracker
         private const int MIN_WIDTH = 500;
         private const int MIN_HEIGHT = 200;
 
-        private Color setUpdatedItemColor;
-        private Font setUpdatedItemFont;
-        private Color setNormalItemColor;
-        private Font setNormalItemFont;
+        private Color updatedItemColor;
+        private Font updatedItemFont;
+        private Color normalItemColor;
+        private Font normalItemFont;
+
+        private string setUpdatedItemColor;
+        private string setUpdatedItemFont;
+        private bool setUpdatedItemBold;
+        private bool setUpdatedItemItalic;
+        private int setUpdatedItemSize;
+        private string setNormalItemColor;
+        private string setNormalItemFont;
+        private bool setNormalItemBold;
+        private bool setNormalItemItalic;
+        private int setNormalItemSize;
 
         private string setCustomBrowser;
         private bool setUseCustomBrowser;
 
         private string appRegistryName = "ak_websitetracker";
+        private string lastUpdated = "-";
+
+        private enum Status
+        {
+            Updated,
+            NotUpdated
+        }
 
         public Form1()
         {
             InitializeComponent();
             notifyIcon1.ContextMenu = contextMenuTray;
+            statusUpdatedItems.Icon = Properties.Resources.wt_bw;
         }
 
         private void LoadSettings()
@@ -83,11 +104,16 @@ namespace WebsiteTracker
             setCustomBrowser = settings.LoadSetting("CustomBrowser");
             setUseCustomBrowser = settings.LoadSetting("UseCustomBrowser", "bool", "false");
 
-            setUpdatedItemColor = ColorTranslator.FromHtml("#457edd");
-            setUpdatedItemFont = new Font(lstItems.Font, FontStyle.Bold);
-
-            setNormalItemColor = SystemColors.ControlText;
-            setNormalItemFont = new Font(lstItems.Font, FontStyle.Regular);
+            setUpdatedItemColor = settings.LoadSetting("UpdatedItemColor", "string", "#015db7");
+            setUpdatedItemFont = settings.LoadSetting("UpdatedItemFont", "string", "Microsoft Sans Serif");
+            setUpdatedItemBold = settings.LoadSetting("UpdatedItemBold", "bool", "false");
+            setUpdatedItemItalic = settings.LoadSetting("UpdatedItemItalic", "bool", "false");
+            setUpdatedItemSize = settings.LoadSetting("UpdatedItemSize", "int", "8");
+            setNormalItemColor = settings.LoadSetting("NormalItemColor", "string", "#000000");
+            setNormalItemFont = settings.LoadSetting("NormalItemFont", "string", "Microsoft Sans Serif");
+            setNormalItemBold = settings.LoadSetting("NormalItemBold", "bool", "false");
+            setNormalItemItalic = settings.LoadSetting("NormalItemItalic", "bool", "false");
+            setNormalItemSize = settings.LoadSetting("NormalItemSize", "int", "8");
         }
 
         private void LoadScreenSettings()
@@ -190,6 +216,17 @@ namespace WebsiteTracker
             settings.SaveSetting("CustomBrowser", setCustomBrowser);
             settings.SaveSetting("UseCustomBrowser", setUseCustomBrowser.ToString());
 
+            settings.SaveSetting("UpdatedItemColor", setUpdatedItemColor.ToString());
+            settings.SaveSetting("UpdatedItemFont", setUpdatedItemFont);
+            settings.SaveSetting("UpdatedItemBold", setUpdatedItemBold.ToString());
+            settings.SaveSetting("UpdatedItemItalic", setUpdatedItemItalic.ToString());
+            settings.SaveSetting("UpdatedItemSize", setUpdatedItemSize.ToString());
+            settings.SaveSetting("NormalItemColor", setNormalItemColor.ToString());
+            settings.SaveSetting("NormalItemFont", setNormalItemFont);
+            settings.SaveSetting("NormalItemBold", setNormalItemBold.ToString());
+            settings.SaveSetting("NormalItemItalic", setNormalItemItalic.ToString());
+            settings.SaveSetting("NormalItemSize", setNormalItemSize.ToString());
+
             settings.SaveSetting("Top", top.ToString());
             settings.SaveSetting("Left", left.ToString());
             settings.SaveSetting("Width", width.ToString());
@@ -248,8 +285,14 @@ namespace WebsiteTracker
 
                             if (list[ITEM_CHANGED] != "")
                             {
-                                item.ForeColor = setUpdatedItemColor;
-                                item.Font = setUpdatedItemFont;
+                                item.ForeColor = updatedItemColor;
+                                item.Font = updatedItemFont;
+                                item.Tag = Status.Updated;
+                            }
+
+                            else
+                            {
+                                item.Tag = Status.NotUpdated;
                             }
 
                             lstItems.Items.Add(item);
@@ -284,7 +327,7 @@ namespace WebsiteTracker
                         string last = item.SubItems[ITEM_LAST].Text;
 
                         string changed = "";
-                        if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor) changed = "X";
+                        if (item.Font == updatedItemFont || item.ForeColor == updatedItemColor) changed = "X";
 
                         sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + last + listFileSeparator + changed);
                     }
@@ -292,6 +335,27 @@ namespace WebsiteTracker
             }
 
             catch (Exception ex) { MessageBox.Show(ex.Message); }
+        }
+
+        private void CreateFonts()
+        {
+            FontStyle updatedFontStyle;
+            if (setUpdatedItemBold && setUpdatedItemItalic) updatedFontStyle = FontStyle.Bold | FontStyle.Italic;
+            else if (setUpdatedItemBold) updatedFontStyle = FontStyle.Bold;
+            else if (setUpdatedItemItalic) updatedFontStyle = FontStyle.Italic;
+            else updatedFontStyle = FontStyle.Regular;
+
+            FontStyle normalFontStyle;
+            if (setNormalItemBold && setNormalItemItalic) normalFontStyle = FontStyle.Bold | FontStyle.Italic;
+            else if (setNormalItemBold) normalFontStyle = FontStyle.Bold;
+            else if (setNormalItemItalic) normalFontStyle = FontStyle.Italic;
+            else normalFontStyle = FontStyle.Regular;
+
+            updatedItemColor = ColorTranslator.FromHtml(setUpdatedItemColor);
+            updatedItemFont = new Font(setUpdatedItemFont, setUpdatedItemSize, updatedFontStyle);
+
+            normalItemColor = ColorTranslator.FromHtml(setNormalItemColor);
+            normalItemFont = new Font(setNormalItemFont, setNormalItemSize, normalFontStyle);
         }
 
         private void CheckSelectedActions()
@@ -325,7 +389,7 @@ namespace WebsiteTracker
                         menuItem_C_List_Disable.Enabled = false;
                     }
 
-                    if (lstItems.SelectedItems[0].Font == setUpdatedItemFont || lstItems.SelectedItems[0].ForeColor == setUpdatedItemColor)
+                    if (lstItems.SelectedItems[0].Tag.ToString() == Status.Updated.ToString())
                     {
                         menuItem_Clear_Changed.Enabled = true;
                         menuItem_C_Clear_Changed.Enabled = true;
@@ -370,10 +434,40 @@ namespace WebsiteTracker
             }
 
             int updated = 0;
+            int enabled = 0;
+            int disabled = 0;
             foreach (ListViewItem item in lstItems.Items)
             {
-                if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor) updated++;
+                if (item.Tag.ToString() == Status.Updated.ToString())
+                {
+                    updated++;
+                    item.ImageKey = "updated_color";
+                    item.Font = updatedItemFont;
+                    item.ForeColor = updatedItemColor;
+                }
+
+                else
+                {
+                    item.ImageKey = "updated_bw_light";
+                    item.Font = normalItemFont;
+                    item.ForeColor = normalItemColor;
+                }
+
+                if (item.SubItems[ITEM_ENABLED].Text != "")
+                {
+                    enabled++;
+                }
+
+                else
+                {
+                    disabled++;
+                }
             }
+
+            statusUpdatedItems.Text = "Updated items: " + updated.ToString();
+            statusEnabledItems.Text = "Enabled items: " + enabled.ToString();
+            statusDisabledItems.Text = "Disabled items: " + disabled.ToString();
+            statusLastChecked.Text = "Last checked: " + lastUpdated;
 
             if (updated > 0)
             {
@@ -381,6 +475,7 @@ namespace WebsiteTracker
                 menuItem_C_Open_All.Enabled = true;
                 menuItem_T_Open_All.Enabled = true;
                 notifyIcon1.Icon = Properties.Resources.wt_color;
+                statusUpdatedItems.Icon = Properties.Resources.wt_color;
             }
 
             else
@@ -389,6 +484,28 @@ namespace WebsiteTracker
                 menuItem_C_Open_All.Enabled = false;
                 menuItem_T_Open_All.Enabled = false;
                 notifyIcon1.Icon = Properties.Resources.wt_bw;
+                statusUpdatedItems.Icon = Properties.Resources.wt_bw;
+            }
+
+            if (enabled > 0)
+            {
+                statusEnabledItems.Icon = Properties.Resources.enabled_color;
+                
+            }
+
+            else
+            {
+                statusEnabledItems.Icon = Properties.Resources.enabled_bw;
+            }
+
+            if (disabled > 0)
+            {
+                statusDisabledItems.Icon = Properties.Resources.disabled_color;
+            }
+
+            else
+            {
+                statusDisabledItems.Icon = Properties.Resources.disabled_bw;
             }
 
             string text;
@@ -414,8 +531,9 @@ namespace WebsiteTracker
 
         private void ClearNewStatus(ListViewItem item)
         {
-            item.ForeColor = setNormalItemColor;
-            item.Font = setNormalItemFont;
+            item.ForeColor = normalItemColor;
+            item.Font = normalItemFont;
+            item.Tag = Status.NotUpdated;
             CheckSelectedActions();
 
             SaveList();
@@ -445,6 +563,7 @@ namespace WebsiteTracker
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
+            CreateFonts();
             LoadScreenSettings();
             LoadList();
             CheckSelectedActions();
@@ -578,9 +697,11 @@ namespace WebsiteTracker
                 item.SubItems.Add(form.ItemStop);
                 item.SubItems.Add(form.ItemChecksum);
                 item.SubItems.Add("-");
+                item.Tag = Status.NotUpdated;
 
                 lstItems.Items.Add(item);
                 SaveList();
+                CheckSelectedActions();
             }
         }
 
@@ -611,11 +732,13 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text = form.ItemStop;
                     lstItems.SelectedItems[0].SubItems[ITEM_CHECKSUM].Text = form.ItemChecksum;
                     lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text = "-";
+                    lstItems.SelectedItems[0].Tag = Status.NotUpdated;
                 }
 
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
 
                 SaveList();
+                CheckSelectedActions();
             }
         }
 
@@ -661,8 +784,7 @@ namespace WebsiteTracker
         {
             if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
             {
-                lstItems.SelectedItems[0].ForeColor = setNormalItemColor;
-                lstItems.SelectedItems[0].Font = setNormalItemFont;
+                lstItems.SelectedItems[0].Tag = Status.NotUpdated;
             }
 
             CheckSelectedActions();
@@ -682,7 +804,7 @@ namespace WebsiteTracker
         {
             foreach (ListViewItem item in lstItems.Items)
             {
-                if (item.Font == setUpdatedItemFont || item.ForeColor == setUpdatedItemColor)
+                if (item.Tag.ToString() == Status.Updated.ToString())
                 {
                     ClearNewStatus(item);
                     OpenWebPage(item.SubItems[ITEM_ADDRESS].Text);
@@ -698,7 +820,6 @@ namespace WebsiteTracker
         {
             if (menuItem_RememberWindowSize.Checked) menuItem_RememberWindowSize.Checked = false;
             else menuItem_RememberWindowSize.Checked = true;
-            SaveSettings();
         }
 
         private void menuItem_RememberWindowPosition_Click(object sender, EventArgs e)
@@ -769,6 +890,66 @@ namespace WebsiteTracker
                 setUseCustomBrowser = form.UseCustom;
                 setCustomBrowser = form.SelectedBrowser;
                 SaveSettings();
+            }
+        }
+
+        private void menuItem_Font_Normal_Click(object sender, EventArgs e)
+        {
+            FontDialog dlg = new FontDialog();
+            dlg.Font = normalItemFont;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setNormalItemFont = dlg.Font.FontFamily.Name;
+                setNormalItemSize = (int)dlg.Font.Size;
+                setNormalItemBold = dlg.Font.Bold;
+                setNormalItemItalic = dlg.Font.Italic;
+                CreateFonts();
+                CheckSelectedActions();
+            }
+        }
+
+        private void menuItem_Font_Updated_Click(object sender, EventArgs e)
+        {
+            FontDialog dlg = new FontDialog();
+            dlg.Font = updatedItemFont;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setUpdatedItemFont = dlg.Font.FontFamily.Name;
+                setUpdatedItemSize = (int)dlg.Font.Size;
+                setUpdatedItemBold = dlg.Font.Bold;
+                setUpdatedItemItalic = dlg.Font.Italic;
+                CreateFonts();
+                CheckSelectedActions();
+            }
+        }
+
+        private void menuItem_Color_Normal_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = normalItemColor;
+            dlg.FullOpen = true;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setNormalItemColor = ColorTranslator.ToHtml(dlg.Color);
+                CreateFonts();
+                CheckSelectedActions();
+            }
+        }
+
+        private void menuItem_Color_Updated_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = updatedItemColor;
+            dlg.FullOpen = true;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setUpdatedItemColor = ColorTranslator.ToHtml(dlg.Color);
+                CreateFonts();
+                CheckSelectedActions();
             }
         }
 

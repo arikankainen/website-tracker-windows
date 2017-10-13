@@ -1,17 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace WebsiteTracker
 {
     static class CheckChanges
     {
+        public static string GetChecksum(string content, string start, string stop)
+        {
+            string result = GetResult(content, start, stop);
+            if (result != "") return CreateMD5(result);
+            else return "";
+        }
+
         public static string GetResult(string content, string start, string stop)
         {
             if (content == "Updating content...") return "";
@@ -20,13 +24,6 @@ namespace WebsiteTracker
 
             Match m = Regex.Match(content, start + "(.*?)" + stop, RegexOptions.Singleline);
             return m.Groups[1].Value.Trim();
-        }
-
-        public static string GetChecksum(string content, string start, string stop)
-        {
-            string result = GetResult(content, start, stop);
-            if (result != "") return CreateMD5(result);
-            else return "";
         }
 
         public static string CreateMD5(string input)

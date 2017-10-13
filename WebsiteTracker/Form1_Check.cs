@@ -73,8 +73,17 @@ namespace WebsiteTracker
                 string stop = item.SubItems[ITEM_STOP].Text;
                 string checksum = CheckChanges.GetChecksum(source, start, stop);
 
-                Action action = () => CheckItemCompleted(item, checksum, logString);
-                this.Invoke(action);
+                if (source != "")
+                {
+                    Action action = () => CheckItemCompleted(item, checksum, logString);
+                    this.Invoke(action);
+                }
+
+                else
+                {
+                    Action action = () => CheckItemError(item, logString);
+                    this.Invoke(action);
+                }
             }
 
             catch { }
@@ -86,26 +95,41 @@ namespace WebsiteTracker
             {
                 if (!formClosing)
                 {
-                    item.SubItems[ITEM_LAST].Text = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
 
                     if (item.SubItems[ITEM_CHECKSUM].Text != "-")
                     {
                         if (item.SubItems[ITEM_CHECKSUM].Text != checksum)
                         {
                             item.SubItems[ITEM_CHECKSUM].Text = checksum;
-                            item.ForeColor = setUpdatedItemColor;
-                            item.Font = setUpdatedItemFont;
+                            item.Tag = Status.Updated;
 
                             CheckSelectedActions();
                             SaveList();
                             CreateNotification("Web page updated!", item.SubItems[ITEM_NAME].Text, item.SubItems[ITEM_ADDRESS].Text);
 
-                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated!    " + logString);
+                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated      " + logString);
                         }
 
-                        else if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated " + logString);
+                        else if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated  " + logString);
                     }
 
+                    CheckSelectedActions();
+                }
+            }
+
+            catch { }
+        }
+
+        private void CheckItemError(ListViewItem item, string logString)
+        {
+            try
+            {
+                if (!formClosing)
+                {
+                    item.SubItems[ITEM_LAST].Text = lastUpdated = TEXT_CONNECTION_ERROR;
+
+                    if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Failed to connect " + logString);
                     CheckSelectedActions();
                 }
             }
