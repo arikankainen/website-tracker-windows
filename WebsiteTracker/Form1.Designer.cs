@@ -67,13 +67,16 @@
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem_Font_Normal = new System.Windows.Forms.MenuItem();
             this.menuItem_Font_Updated = new System.Windows.Forms.MenuItem();
+            this.menuItem_Font_Error = new System.Windows.Forms.MenuItem();
             this.menuItem21 = new System.Windows.Forms.MenuItem();
             this.menuItem_Color_Normal = new System.Windows.Forms.MenuItem();
             this.menuItem_Color_Updated = new System.Windows.Forms.MenuItem();
+            this.menuItem_Color_Error = new System.Windows.Forms.MenuItem();
             this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.menuItem_Help = new System.Windows.Forms.MenuItem();
             this.statusBar1 = new System.Windows.Forms.StatusBar();
             this.statusUpdatedItems = new System.Windows.Forms.StatusBarPanel();
+            this.statusErrorItems = new System.Windows.Forms.StatusBarPanel();
             this.statusEnabledItems = new System.Windows.Forms.StatusBarPanel();
             this.statusDisabledItems = new System.Windows.Forms.StatusBarPanel();
             this.statusDummy = new System.Windows.Forms.StatusBarPanel();
@@ -89,6 +92,7 @@
             this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageListGlobe = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu1 = new System.Windows.Forms.ContextMenu();
             this.menuItem_C_CheckSelected = new System.Windows.Forms.MenuItem();
@@ -113,6 +117,7 @@
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).BeginInit();
@@ -361,40 +366,54 @@
             this.menuItem4.Index = 15;
             this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Font_Normal,
-            this.menuItem_Font_Updated});
+            this.menuItem_Font_Updated,
+            this.menuItem_Font_Error});
             this.menuItem4.Text = "Set font";
             // 
             // menuItem_Font_Normal
             // 
             this.menuItem_Font_Normal.Index = 0;
-            this.menuItem_Font_Normal.Text = "For normal items...";
+            this.menuItem_Font_Normal.Text = "Not updated items...";
             this.menuItem_Font_Normal.Click += new System.EventHandler(this.menuItem_Font_Normal_Click);
             // 
             // menuItem_Font_Updated
             // 
             this.menuItem_Font_Updated.Index = 1;
-            this.menuItem_Font_Updated.Text = "For updated items...";
+            this.menuItem_Font_Updated.Text = "Updated items...";
             this.menuItem_Font_Updated.Click += new System.EventHandler(this.menuItem_Font_Updated_Click);
+            // 
+            // menuItem_Font_Error
+            // 
+            this.menuItem_Font_Error.Index = 2;
+            this.menuItem_Font_Error.Text = "Errors...";
+            this.menuItem_Font_Error.Click += new System.EventHandler(this.menuItem_Font_Error_Click);
             // 
             // menuItem21
             // 
             this.menuItem21.Index = 16;
             this.menuItem21.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Color_Normal,
-            this.menuItem_Color_Updated});
+            this.menuItem_Color_Updated,
+            this.menuItem_Color_Error});
             this.menuItem21.Text = "Set color";
             // 
             // menuItem_Color_Normal
             // 
             this.menuItem_Color_Normal.Index = 0;
-            this.menuItem_Color_Normal.Text = "For normal items...";
+            this.menuItem_Color_Normal.Text = "Not updated items...";
             this.menuItem_Color_Normal.Click += new System.EventHandler(this.menuItem_Color_Normal_Click);
             // 
             // menuItem_Color_Updated
             // 
             this.menuItem_Color_Updated.Index = 1;
-            this.menuItem_Color_Updated.Text = "For updated items...";
+            this.menuItem_Color_Updated.Text = "Updated items...";
             this.menuItem_Color_Updated.Click += new System.EventHandler(this.menuItem_Color_Updated_Click);
+            // 
+            // menuItem_Color_Error
+            // 
+            this.menuItem_Color_Error.Index = 2;
+            this.menuItem_Color_Error.Text = "Errors...";
+            this.menuItem_Color_Error.Click += new System.EventHandler(this.menuItem_Color_Error_Click);
             // 
             // menuItem6
             // 
@@ -415,12 +434,13 @@
             this.statusBar1.Name = "statusBar1";
             this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusUpdatedItems,
+            this.statusErrorItems,
             this.statusEnabledItems,
             this.statusDisabledItems,
             this.statusDummy,
             this.statusLastChecked});
             this.statusBar1.ShowPanels = true;
-            this.statusBar1.Size = new System.Drawing.Size(1104, 22);
+            this.statusBar1.Size = new System.Drawing.Size(1262, 22);
             this.statusBar1.TabIndex = 1;
             // 
             // statusUpdatedItems
@@ -429,7 +449,16 @@
             this.statusUpdatedItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
             this.statusUpdatedItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
             this.statusUpdatedItems.Name = "statusUpdatedItems";
-            this.statusUpdatedItems.Text = "Updated items: 0";
+            this.statusUpdatedItems.Text = "Updated: 0";
+            this.statusUpdatedItems.Width = 69;
+            // 
+            // statusErrorItems
+            // 
+            this.statusErrorItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
+            this.statusErrorItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
+            this.statusErrorItems.Name = "statusErrorItems";
+            this.statusErrorItems.Text = "Errors: 0";
+            this.statusErrorItems.Width = 57;
             // 
             // statusEnabledItems
             // 
@@ -437,8 +466,8 @@
             this.statusEnabledItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
             this.statusEnabledItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
             this.statusEnabledItems.Name = "statusEnabledItems";
-            this.statusEnabledItems.Text = "Enabled items: 0";
-            this.statusEnabledItems.Width = 98;
+            this.statusEnabledItems.Text = "Enabled: 0";
+            this.statusEnabledItems.Width = 68;
             // 
             // statusDisabledItems
             // 
@@ -446,15 +475,15 @@
             this.statusDisabledItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
             this.statusDisabledItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
             this.statusDisabledItems.Name = "statusDisabledItems";
-            this.statusDisabledItems.Text = "Disabled items: 0";
-            this.statusDisabledItems.Width = 101;
+            this.statusDisabledItems.Text = "Disabled: 0";
+            this.statusDisabledItems.Width = 71;
             // 
             // statusDummy
             // 
             this.statusDummy.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring;
             this.statusDummy.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
             this.statusDummy.Name = "statusDummy";
-            this.statusDummy.Width = 697;
+            this.statusDummy.Width = 889;
             // 
             // statusLastChecked
             // 
@@ -492,14 +521,16 @@
             this.clmContentStart,
             this.clmContentStop,
             this.clmChecksum,
-            this.clmLastChecked});
+            this.clmLastChecked,
+            this.clmStatus});
             this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
             this.lstItems.HideSelection = false;
             this.lstItems.Location = new System.Drawing.Point(12, 12);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
-            this.lstItems.Size = new System.Drawing.Size(1080, 252);
+            this.lstItems.ShowItemToolTips = true;
+            this.lstItems.Size = new System.Drawing.Size(1238, 252);
             this.lstItems.SmallImageList = this.imageListGlobe;
             this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstItems.TabIndex = 0;
@@ -550,6 +581,11 @@
             this.clmLastChecked.Text = "Last checked";
             this.clmLastChecked.Width = 126;
             // 
+            // clmStatus
+            // 
+            this.clmStatus.Text = "Status";
+            this.clmStatus.Width = 153;
+            // 
             // imageListGlobe
             // 
             this.imageListGlobe.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListGlobe.ImageStream")));
@@ -557,8 +593,7 @@
             this.imageListGlobe.Images.SetKeyName(0, "updated_bw_light");
             this.imageListGlobe.Images.SetKeyName(1, "updated_bw");
             this.imageListGlobe.Images.SetKeyName(2, "updated_color");
-            this.imageListGlobe.Images.SetKeyName(3, "disabled_color");
-            this.imageListGlobe.Images.SetKeyName(4, "enabled_color");
+            this.imageListGlobe.Images.SetKeyName(3, "updated_red");
             // 
             // contextMenu1
             // 
@@ -714,10 +749,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1104, 298);
+            this.ClientSize = new System.Drawing.Size(1262, 298);
             this.Controls.Add(this.statusBar1);
             this.Controls.Add(this.lstItems);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Menu = this.mainMenu1;
             this.MinimumSize = new System.Drawing.Size(500, 200);
             this.Name = "Form1";
@@ -728,8 +764,10 @@
             this.Shown += new System.EventHandler(this.Form1_Shown);
             this.LocationChanged += new System.EventHandler(this.Form1_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.Form1_SizeChanged);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.Form1_Layout);
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).EndInit();
@@ -822,6 +860,10 @@
         private System.Windows.Forms.MenuItem menuItem21;
         private System.Windows.Forms.MenuItem menuItem_Color_Normal;
         private System.Windows.Forms.MenuItem menuItem_Color_Updated;
+        private System.Windows.Forms.ColumnHeader clmStatus;
+        private System.Windows.Forms.MenuItem menuItem_Font_Error;
+        private System.Windows.Forms.MenuItem menuItem_Color_Error;
+        private System.Windows.Forms.StatusBarPanel statusErrorItems;
     }
 }
 

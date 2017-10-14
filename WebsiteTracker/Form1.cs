@@ -26,7 +26,8 @@ namespace WebsiteTracker
         private const int ITEM_STOP = 5;
         private const int ITEM_CHECKSUM = 6;
         private const int ITEM_LAST = 7;
-        private const int ITEM_CHANGED = 8;
+        private const int ITEM_STATUS = 8;
+        private const int ITEM_CHANGED = 9;
 
         private const string TEXT_CHECKING = "Checking...";
         private const string TEXT_CONNECTION_ERROR = "Failed to connect";
@@ -50,17 +51,26 @@ namespace WebsiteTracker
         private Font updatedItemFont;
         private Color normalItemColor;
         private Font normalItemFont;
+        private Color errorItemColor;
+        private Font errorItemFont;
 
         private string setUpdatedItemColor;
         private string setUpdatedItemFont;
         private bool setUpdatedItemBold;
         private bool setUpdatedItemItalic;
         private int setUpdatedItemSize;
+
         private string setNormalItemColor;
         private string setNormalItemFont;
         private bool setNormalItemBold;
         private bool setNormalItemItalic;
         private int setNormalItemSize;
+
+        private string setErrorItemColor;
+        private string setErrorItemFont;
+        private bool setErrorItemBold;
+        private bool setErrorItemItalic;
+        private int setErrorItemSize;
 
         private string setCustomBrowser;
         private bool setUseCustomBrowser;
@@ -71,7 +81,8 @@ namespace WebsiteTracker
         private enum Status
         {
             Updated,
-            NotUpdated
+            NotUpdated,
+            Error
         }
 
         public Form1()
@@ -114,6 +125,11 @@ namespace WebsiteTracker
             setNormalItemBold = settings.LoadSetting("NormalItemBold", "bool", "false");
             setNormalItemItalic = settings.LoadSetting("NormalItemItalic", "bool", "false");
             setNormalItemSize = settings.LoadSetting("NormalItemSize", "int", "8");
+            setErrorItemColor = settings.LoadSetting("ErrorItemColor", "string", "#dd0000");
+            setErrorItemFont = settings.LoadSetting("ErrorItemFont", "string", "Microsoft Sans Serif");
+            setErrorItemBold = settings.LoadSetting("ErrorItemBold", "bool", "false");
+            setErrorItemItalic = settings.LoadSetting("ErrorItemItalic", "bool", "false");
+            setErrorItemSize = settings.LoadSetting("ErrorItemSize", "int", "8");
         }
 
         private void LoadScreenSettings()
@@ -173,6 +189,7 @@ namespace WebsiteTracker
                 clmContentStop.Width = settings.LoadSetting("WidthColumnContentStop", "int", "125");
                 clmChecksum.Width = settings.LoadSetting("WidthColumnChecksum", "int", "256");
                 clmLastChecked.Width = settings.LoadSetting("WidthColumnLastChecked", "int", "140");
+                clmStatus.Width = settings.LoadSetting("WidthColumnStatus", "int", "66");
             }
 
             settings.SaveSetting("WidthColumnName", clmName.Width.ToString());
@@ -183,6 +200,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
             settings.SaveSetting("WidthColumnChecksum", clmChecksum.Width.ToString());
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
+            settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
 
         }
 
@@ -226,6 +244,11 @@ namespace WebsiteTracker
             settings.SaveSetting("NormalItemBold", setNormalItemBold.ToString());
             settings.SaveSetting("NormalItemItalic", setNormalItemItalic.ToString());
             settings.SaveSetting("NormalItemSize", setNormalItemSize.ToString());
+            settings.SaveSetting("ErrorItemColor", setErrorItemColor.ToString());
+            settings.SaveSetting("ErrorItemFont", setErrorItemFont);
+            settings.SaveSetting("ErrorItemBold", setErrorItemBold.ToString());
+            settings.SaveSetting("ErrorItemItalic", setErrorItemItalic.ToString());
+            settings.SaveSetting("ErrorItemSize", setErrorItemSize.ToString());
 
             settings.SaveSetting("Top", top.ToString());
             settings.SaveSetting("Left", left.ToString());
@@ -240,6 +263,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
             settings.SaveSetting("WidthColumnChecksum", clmChecksum.Width.ToString());
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
+            settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
 
             if (this.WindowState == FormWindowState.Maximized) settings.SaveSetting("Maximized", "True");
             else settings.SaveSetting("Maximized", "False");
@@ -282,17 +306,28 @@ namespace WebsiteTracker
                             item.SubItems.Add(list[ITEM_STOP].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_CHECKSUM]);
                             item.SubItems.Add(list[ITEM_LAST]);
+                            item.SubItems.Add(list[ITEM_STATUS]);
+                            item.Tag = "";
 
-                            if (list[ITEM_CHANGED] != "")
+                            if (list[ITEM_CHANGED] == Status.Updated.ToString())
                             {
                                 item.ForeColor = updatedItemColor;
                                 item.Font = updatedItemFont;
                                 item.Tag = Status.Updated;
                             }
 
-                            else
+                            if (list[ITEM_CHANGED] == Status.NotUpdated.ToString())
                             {
+                                item.ForeColor = normalItemColor;
+                                item.Font = normalItemFont;
                                 item.Tag = Status.NotUpdated;
+                            }
+
+                            else if (list[ITEM_CHANGED] == Status.Error.ToString())
+                            {
+                                item.ForeColor = errorItemColor;
+                                item.Font = errorItemFont;
+                                item.Tag = Status.Error;
                             }
 
                             lstItems.Items.Add(item);
@@ -325,11 +360,11 @@ namespace WebsiteTracker
                         string stop = item.SubItems[ITEM_STOP].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string checksum = item.SubItems[ITEM_CHECKSUM].Text;
                         string last = item.SubItems[ITEM_LAST].Text;
+                        string status = item.SubItems[ITEM_STATUS].Text;
+                        string changed = item.Tag.ToString();
+                        //MessageBox.Show(item.SubItems[ITEM_NAME].Text + "    " + item.Tag.ToString());
 
-                        string changed = "";
-                        if (item.Font == updatedItemFont || item.ForeColor == updatedItemColor) changed = "X";
-
-                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + last + listFileSeparator + changed);
+                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + last + listFileSeparator + status + listFileSeparator + changed);
                     }
                 }
             }
@@ -351,11 +386,20 @@ namespace WebsiteTracker
             else if (setNormalItemItalic) normalFontStyle = FontStyle.Italic;
             else normalFontStyle = FontStyle.Regular;
 
+            FontStyle errorFontStyle;
+            if (setErrorItemBold && setErrorItemItalic) errorFontStyle = FontStyle.Bold | FontStyle.Italic;
+            else if (setErrorItemBold) errorFontStyle = FontStyle.Bold;
+            else if (setErrorItemItalic) errorFontStyle = FontStyle.Italic;
+            else errorFontStyle = FontStyle.Regular;
+
             updatedItemColor = ColorTranslator.FromHtml(setUpdatedItemColor);
             updatedItemFont = new Font(setUpdatedItemFont, setUpdatedItemSize, updatedFontStyle);
 
             normalItemColor = ColorTranslator.FromHtml(setNormalItemColor);
             normalItemFont = new Font(setNormalItemFont, setNormalItemSize, normalFontStyle);
+
+            errorItemColor = ColorTranslator.FromHtml(setErrorItemColor);
+            errorItemFont = new Font(setErrorItemFont, setErrorItemSize, errorFontStyle);
         }
 
         private void CheckSelectedActions()
@@ -434,8 +478,10 @@ namespace WebsiteTracker
             }
 
             int updated = 0;
+            int errors = 0;
             int enabled = 0;
             int disabled = 0;
+
             foreach (ListViewItem item in lstItems.Items)
             {
                 if (item.Tag.ToString() == Status.Updated.ToString())
@@ -446,11 +492,19 @@ namespace WebsiteTracker
                     item.ForeColor = updatedItemColor;
                 }
 
-                else
+                else if (item.Tag.ToString() == Status.NotUpdated.ToString())
                 {
                     item.ImageKey = "updated_bw_light";
                     item.Font = normalItemFont;
                     item.ForeColor = normalItemColor;
+                }
+
+                else if (item.Tag.ToString() == Status.Error.ToString())
+                {
+                    errors++;
+                    item.ImageKey = "updated_red";
+                    item.Font = errorItemFont;
+                    item.ForeColor = errorItemColor;
                 }
 
                 if (item.SubItems[ITEM_ENABLED].Text != "")
@@ -464,9 +518,10 @@ namespace WebsiteTracker
                 }
             }
 
-            statusUpdatedItems.Text = "Updated items: " + updated.ToString();
-            statusEnabledItems.Text = "Enabled items: " + enabled.ToString();
-            statusDisabledItems.Text = "Disabled items: " + disabled.ToString();
+            statusUpdatedItems.Text = "Updated: " + updated.ToString();
+            statusErrorItems.Text = "Errors: " + errors.ToString();
+            statusEnabledItems.Text = "Enabled: " + enabled.ToString();
+            statusDisabledItems.Text = "Disabled: " + disabled.ToString();
             statusLastChecked.Text = "Last checked: " + lastUpdated;
 
             if (updated > 0)
@@ -485,6 +540,17 @@ namespace WebsiteTracker
                 menuItem_T_Open_All.Enabled = false;
                 notifyIcon1.Icon = Properties.Resources.wt_bw;
                 statusUpdatedItems.Icon = Properties.Resources.wt_bw;
+            }
+
+            if (errors > 0)
+            {
+                statusErrorItems.Icon = Properties.Resources.wt16_red;
+
+            }
+
+            else
+            {
+                statusErrorItems.Icon = Properties.Resources.wt_bw;
             }
 
             if (enabled > 0)
@@ -642,6 +708,14 @@ namespace WebsiteTracker
             if (e.Button == MouseButtons.Right)
             {
                 contextMenu1.Show(lstItems, new Point(e.X, e.Y));
+            }
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5)
+            {
+                WatchList(true);
             }
         }
 
@@ -925,6 +999,22 @@ namespace WebsiteTracker
             }
         }
 
+        private void menuItem_Font_Error_Click(object sender, EventArgs e)
+        {
+            FontDialog dlg = new FontDialog();
+            dlg.Font = errorItemFont;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setErrorItemFont = dlg.Font.FontFamily.Name;
+                setErrorItemSize = (int)dlg.Font.Size;
+                setErrorItemBold = dlg.Font.Bold;
+                setErrorItemItalic = dlg.Font.Italic;
+                CreateFonts();
+                CheckSelectedActions();
+            }
+        }
+
         private void menuItem_Color_Normal_Click(object sender, EventArgs e)
         {
             ColorDialog dlg = new ColorDialog();
@@ -948,6 +1038,20 @@ namespace WebsiteTracker
             if (dlg.ShowDialog() != DialogResult.Cancel)
             {
                 setUpdatedItemColor = ColorTranslator.ToHtml(dlg.Color);
+                CreateFonts();
+                CheckSelectedActions();
+            }
+        }
+
+        private void menuItem_Color_Error_Click(object sender, EventArgs e)
+        {
+            ColorDialog dlg = new ColorDialog();
+            dlg.Color = errorItemColor;
+            dlg.FullOpen = true;
+
+            if (dlg.ShowDialog() != DialogResult.Cancel)
+            {
+                setErrorItemColor = ColorTranslator.ToHtml(dlg.Color);
                 CreateFonts();
                 CheckSelectedActions();
             }

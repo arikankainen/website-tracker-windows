@@ -119,6 +119,7 @@
     <None Include="Resources\disabled_color.ico" />
     <None Include="Resources\enabled_bw.ico" />
     <None Include="Resources\enabled_color.ico" />
+    <None Include="Resources\wt16_red.ico" />
     <Content Include="wt_color.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

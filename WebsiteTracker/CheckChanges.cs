@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace WebsiteTracker
 {
@@ -58,9 +59,9 @@ namespace WebsiteTracker
                 }
             }
 
-            catch
+            catch (WebException ex)
             {
-                return "";
+                return "[ERROR]" + ex.Message;
             }
         }
 
@@ -71,7 +72,7 @@ namespace WebsiteTracker
         protected override WebRequest GetWebRequest(Uri uri)
         {
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 15 * 1000;
+            w.Timeout = 5 * 1000;
             return w;
         }
     }

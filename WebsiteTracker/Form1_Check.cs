@@ -73,15 +73,15 @@ namespace WebsiteTracker
                 string stop = item.SubItems[ITEM_STOP].Text;
                 string checksum = CheckChanges.GetChecksum(source, start, stop);
 
-                if (source != "")
+                if (source == "" || source.Substring(0, 7) == "[ERROR]")
                 {
-                    Action action = () => CheckItemCompleted(item, checksum, logString);
+                    Action action = () => CheckItemError(item, source.Substring(7), logString);
                     this.Invoke(action);
                 }
 
                 else
                 {
-                    Action action = () => CheckItemError(item, logString);
+                    Action action = () => CheckItemCompleted(item, checksum, logString);
                     this.Invoke(action);
                 }
             }
@@ -96,6 +96,7 @@ namespace WebsiteTracker
                 if (!formClosing)
                 {
                     item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_STATUS].Text = "OK";
 
                     if (item.SubItems[ITEM_CHECKSUM].Text != "-")
                     {
@@ -111,7 +112,11 @@ namespace WebsiteTracker
                             if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated      " + logString);
                         }
 
-                        else if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated  " + logString);
+                        else
+                        {
+                            if (item.Tag.ToString() == Status.Error.ToString()) item.Tag = Status.NotUpdated;
+                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated  " + logString);
+                        }
                     }
 
                     CheckSelectedActions();
@@ -121,13 +126,15 @@ namespace WebsiteTracker
             catch { }
         }
 
-        private void CheckItemError(ListViewItem item, string logString)
+        private void CheckItemError(ListViewItem item, string error, string logString)
         {
             try
             {
                 if (!formClosing)
                 {
-                    item.SubItems[ITEM_LAST].Text = lastUpdated = TEXT_CONNECTION_ERROR;
+                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_STATUS].Text = "ERROR - " + error;
+                    item.Tag = Status.Error;
 
                     if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Failed to connect " + logString);
                     CheckSelectedActions();
