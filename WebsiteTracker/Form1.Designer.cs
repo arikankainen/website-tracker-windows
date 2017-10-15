@@ -33,6 +33,9 @@
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem_File = new System.Windows.Forms.MenuItem();
             this.menuItem_Exit = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.menuItem_BackupList = new System.Windows.Forms.MenuItem();
+            this.menuItem_RestoreList = new System.Windows.Forms.MenuItem();
             this.menuItem_List = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckSelected = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckAll = new System.Windows.Forms.MenuItem();
@@ -136,7 +139,10 @@
             // 
             this.menuItem_File.Index = 0;
             this.menuItem_File.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem_Exit});
+            this.menuItem_Exit,
+            this.menuItem18,
+            this.menuItem_BackupList,
+            this.menuItem_RestoreList});
             this.menuItem_File.Text = "File";
             // 
             // menuItem_Exit
@@ -144,6 +150,23 @@
             this.menuItem_Exit.Index = 0;
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 1;
+            this.menuItem18.Text = "-";
+            // 
+            // menuItem_BackupList
+            // 
+            this.menuItem_BackupList.Index = 2;
+            this.menuItem_BackupList.Text = "Backup...";
+            this.menuItem_BackupList.Click += new System.EventHandler(this.menuItem_BackupList_Click);
+            // 
+            // menuItem_RestoreList
+            // 
+            this.menuItem_RestoreList.Index = 3;
+            this.menuItem_RestoreList.Text = "Restore...";
+            this.menuItem_RestoreList.Click += new System.EventHandler(this.menuItem_RestoreList_Click);
             // 
             // menuItem_List
             // 
@@ -864,6 +887,9 @@
         private System.Windows.Forms.MenuItem menuItem_Font_Error;
         private System.Windows.Forms.MenuItem menuItem_Color_Error;
         private System.Windows.Forms.StatusBarPanel statusErrorItems;
+        private System.Windows.Forms.MenuItem menuItem18;
+        private System.Windows.Forms.MenuItem menuItem_BackupList;
+        private System.Windows.Forms.MenuItem menuItem_RestoreList;
     }
 }
 

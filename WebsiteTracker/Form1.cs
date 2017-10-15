@@ -5,18 +5,26 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace WebsiteTracker
 {
     public partial class Form1 : Form
     {
+        #region Fields
+
         private Settings settings = new Settings();
 
-        private string listFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "list.lst");
+        private string logFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "check.log");
+        private string listFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "list.wtlst");
         private char listFileSeparator = '|';
         private string separatorString = "!#PIPE#CHARACTER#!";
+        private string dateString = @"dd.MM.yyyy HH:mm:ss";
+
+        private string appRegistryName = "ak_websitetracker";
+        private string lastUpdated = "-";
 
         private const int ITEM_NAME = 0;
         private const int ITEM_ENABLED = 1;
@@ -30,7 +38,6 @@ namespace WebsiteTracker
         private const int ITEM_CHANGED = 9;
 
         private const string TEXT_CHECKING = "Checking...";
-        private const string TEXT_CONNECTION_ERROR = "Failed to connect";
 
         private int width;
         private int height;
@@ -42,7 +49,7 @@ namespace WebsiteTracker
         private bool formClosing = false;
         private bool formCloseNow = false;
 
-        private const int DEFAULT_WIDTH = 1192;
+        private const int DEFAULT_WIDTH = 1257;
         private const int DEFAULT_HEIGHT = 400;
         private const int MIN_WIDTH = 500;
         private const int MIN_HEIGHT = 200;
@@ -75,8 +82,7 @@ namespace WebsiteTracker
         private string setCustomBrowser;
         private bool setUseCustomBrowser;
 
-        private string appRegistryName = "ak_websitetracker";
-        private string lastUpdated = "-";
+        #endregion
 
         private enum Status
         {
@@ -281,15 +287,15 @@ namespace WebsiteTracker
             }
         }
         
-        private void LoadList()
+        private void LoadList(string filename)
         {
             try
             {
                 lstItems.Items.Clear();
 
-                if (File.Exists(listFile))
+                if (File.Exists(filename))
                 {
-                    using (StreamReader reader = File.OpenText(listFile))
+                    using (StreamReader reader = File.OpenText(filename))
                     {
                         lstItems.BeginUpdate();
 
@@ -298,7 +304,7 @@ namespace WebsiteTracker
                             string line = reader.ReadLine();
                             List<string> list = line.Split(listFileSeparator).ToList<string>();
 
-                            ListViewItem item = new ListViewItem(list[ITEM_NAME]);
+                            ListViewItem item = new ListViewItem(list[ITEM_NAME].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_ENABLED]);
                             item.SubItems.Add(list[ITEM_ADDRESS]);
                             item.SubItems.Add(list[ITEM_INTERVAL]);
@@ -342,17 +348,17 @@ namespace WebsiteTracker
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        private void SaveList()
+        private void SaveList(string filename)
         {
             try
             {
-                using (StreamWriter sw = new StreamWriter(listFile))
+                using (StreamWriter sw = new StreamWriter(filename))
                 {
                     foreach (ListViewItem item in lstItems.Items)
                     {
                         if (item.SubItems[ITEM_LAST].Text == TEXT_CHECKING) item.SubItems[ITEM_LAST].Text = "-";
 
-                        string name = item.SubItems[ITEM_NAME].Text;
+                        string name = item.SubItems[ITEM_NAME].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string enabled = item.SubItems[ITEM_ENABLED].Text;
                         string address = item.SubItems[ITEM_ADDRESS].Text;
                         string interval = item.SubItems[ITEM_INTERVAL].Text;
@@ -362,7 +368,6 @@ namespace WebsiteTracker
                         string last = item.SubItems[ITEM_LAST].Text;
                         string status = item.SubItems[ITEM_STATUS].Text;
                         string changed = item.Tag.ToString();
-                        //MessageBox.Show(item.SubItems[ITEM_NAME].Text + "    " + item.Tag.ToString());
 
                         sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + last + listFileSeparator + status + listFileSeparator + changed);
                     }
@@ -402,7 +407,7 @@ namespace WebsiteTracker
             errorItemFont = new Font(setErrorItemFont, setErrorItemSize, errorFontStyle);
         }
 
-        private void CheckSelectedActions()
+        private void CheckItemsAndIconsAndMenus()
         {
             if (lstItems.SelectedItems.Count > 0)
             {
@@ -590,21 +595,31 @@ namespace WebsiteTracker
         private void ShowWindow()
         {
             this.Show();
+
             if (maximized) this.WindowState = FormWindowState.Maximized;
             else this.WindowState = FormWindowState.Normal;
+
             this.Activate();
         }
 
+        /// <summary>
+        /// Clear item's "new" status
+        /// </summary>
+        /// <param name="item">Item</param>
         private void ClearNewStatus(ListViewItem item)
         {
             item.ForeColor = normalItemColor;
             item.Font = normalItemFont;
             item.Tag = Status.NotUpdated;
-            CheckSelectedActions();
 
-            SaveList();
+            CheckItemsAndIconsAndMenus();
+            SaveList(listFile);
         }
 
+        /// <summary>
+        /// Open web page to custom or default browser
+        /// </summary>
+        /// <param name="address">Web page address</param>
         private void OpenWebPage(string address)
         {
             if (setUseCustomBrowser && File.Exists(setCustomBrowser))
@@ -622,17 +637,192 @@ namespace WebsiteTracker
             }
         }
 
-        /*************************************************************************/
-        // EVENTS
-        /*************************************************************************/
+        /// <summary>
+        /// Iterate through list and send each item to check if update is needed
+        /// </summary>
+        /// <param name="forceCheck">Force check even if item is disabled?</param>
+        private void WatchList(bool forceCheck)
+        {
+            try
+            {
+                foreach (ListViewItem item in lstItems.Items)
+                {
+                    WatchItem(item, forceCheck);
+                }
+            }
+
+            catch { }
+        }
+
+        /// <summary>
+        /// Check if item update is needed
+        /// </summary>
+        /// <param name="item">Item to check</param>
+        /// <param name="forceCheck">Force check even if item is disabled?</param>
+        private void WatchItem(ListViewItem item, bool forceCheck)
+        {
+            if (item.SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            {
+                if (forceCheck || item.SubItems[ITEM_ENABLED].Text != "")
+                {
+                    DateTime now = DateTime.Now;
+                    DateTime lastCheck = DateTime.MinValue;
+                    DateTime.TryParse(item.SubItems[ITEM_LAST].Text, out lastCheck);
+
+                    Match m = Regex.Match(item.SubItems[ITEM_INTERVAL].Text, @"(\d+)d (\d+)h (\d+)m");
+                    int days = Convert.ToInt32(m.Groups[1].Value);
+                    int hours = Convert.ToInt32(m.Groups[2].Value);
+                    int minutes = Convert.ToInt32(m.Groups[3].Value);
+
+                    DateTime nextCheck = lastCheck.AddDays(days).AddHours(hours).AddMinutes(minutes);
+
+                    if (now >= nextCheck || forceCheck)
+                    {
+                        item.SubItems[ITEM_LAST].Text = TEXT_CHECKING;
+                        CheckItemsAndIconsAndMenus();
+
+                        Thread thread = new Thread(() => CheckItem(item));
+                        thread.IsBackground = true;
+                        thread.Start();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Update item
+        /// </summary>
+        /// <param name="item">Item to update</param>
+        private void CheckItem(ListViewItem item)
+        {
+            try
+            {
+                string logString = "[" + DateTime.Now.ToString(dateString) + "] " + item.SubItems[ITEM_ADDRESS].Text + Environment.NewLine;
+
+                string source = CheckChanges.GetSource(item.SubItems[ITEM_ADDRESS].Text);
+                string start = item.SubItems[ITEM_START].Text;
+                string stop = item.SubItems[ITEM_STOP].Text;
+                string checksum = CheckChanges.GetChecksum(source, start, stop);
+
+                if (source == "" || source.Substring(0, 7) == "[ERROR]")
+                {
+                    Action action = () => CheckItemError(item, source.Substring(7), logString);
+                    this.Invoke(action);
+                }
+
+                else
+                {
+                    Action action = () => CheckItemCompleted(item, checksum, logString);
+                    this.Invoke(action);
+                }
+            }
+
+            catch { }
+        }
+
+        /// <summary>
+        /// Item updated successfully
+        /// </summary>
+        /// <param name="item">Item</param>
+        /// <param name="checksum">MD5 checksum of page</param>
+        /// <param name="logString">String to save to log</param>
+        private void CheckItemCompleted(ListViewItem item, string checksum, string logString)
+        {
+            try
+            {
+                if (!formClosing)
+                {
+                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_STATUS].Text = "OK";
+
+                    if (item.SubItems[ITEM_CHECKSUM].Text != "-")
+                    {
+                        if (item.SubItems[ITEM_CHECKSUM].Text != checksum)
+                        {
+                            item.SubItems[ITEM_CHECKSUM].Text = checksum;
+                            item.Tag = Status.Updated;
+
+                            CheckItemsAndIconsAndMenus();
+                            SaveList(listFile);
+                            CreateNotification("Web page updated!", item.SubItems[ITEM_NAME].Text, item.SubItems[ITEM_ADDRESS].Text);
+
+                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page updated      " + logString);
+                        }
+
+                        else
+                        {
+                            if (item.Tag.ToString() == Status.Error.ToString()) item.Tag = Status.NotUpdated;
+                            if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated  " + logString);
+                        }
+                    }
+
+                    CheckItemsAndIconsAndMenus();
+                }
+            }
+
+            catch { }
+        }
+
+        /// <summary>
+        /// Item update failed
+        /// </summary>
+        /// <param name="item">Item</param>
+        /// <param name="error">Error message</param>
+        /// <param name="logString">String to save to log</param>
+        private void CheckItemError(ListViewItem item, string error, string logString)
+        {
+            try
+            {
+                if (!formClosing)
+                {
+                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_STATUS].Text = "ERROR - " + error;
+                    item.Tag = Status.Error;
+
+                    if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Failed to connect " + logString);
+                    CheckItemsAndIconsAndMenus();
+                }
+            }
+
+            catch { }
+        }
+
+        /// <summary>
+        /// Create desktop notification
+        /// </summary>
+        /// <param name="title">Title</param>
+        /// <param name="text">Body text</param>
+        /// <param name="address">Address</param>
+        private void CreateNotification(string title, string text, string address)
+        {
+            if (menuItem_ShowNotifications.Checked)
+            {
+                notifyIcon1.BalloonTipIcon = ToolTipIcon.None;
+                notifyIcon1.BalloonTipTitle = title;
+                notifyIcon1.BalloonTipText = text + Environment.NewLine + address;
+                notifyIcon1.ShowBalloonTip(4000);
+            }
+        }
+
+        /// <summary>
+        /// Timer to check list every 10 seconds
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timerCheckList_Tick(object sender, EventArgs e)
+        {
+            WatchList(false);
+        }
+
+        #region Events
 
         private void Form1_Load(object sender, EventArgs e)
         {
             LoadSettings();
             CreateFonts();
             LoadScreenSettings();
-            LoadList();
-            CheckSelectedActions();
+            LoadList(listFile);
+            CheckItemsAndIconsAndMenus();
         }
 
         private void Form1_Shown(object sender, EventArgs e)
@@ -648,7 +838,7 @@ namespace WebsiteTracker
                 formClosing = true;
                 timerCheckList.Stop();
                 CheckWindowSizeAndLocation();
-                SaveList();
+                SaveList(listFile);
                 SaveSettings();
             }
 
@@ -676,7 +866,7 @@ namespace WebsiteTracker
 
         private void lstItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            CheckSelectedActions();
+            CheckItemsAndIconsAndMenus();
         }
 
         private void lstItems_DoubleClick(object sender, EventArgs e)
@@ -719,9 +909,9 @@ namespace WebsiteTracker
             }
         }
 
-        /*************************************************************************/
-        // MENUITEMS : TRAY
-        /*************************************************************************/
+        #endregion
+        
+        #region MenuItems: Tray
 
         private void menuItem_Show(object sender, EventArgs e)
         {
@@ -729,9 +919,9 @@ namespace WebsiteTracker
             ShowWindow();
         }
 
-        /*************************************************************************/
-        // MENUITEMS : FILE
-        /*************************************************************************/
+        #endregion
+
+        #region MenuItems: File
 
         private void menuItem_Exit_Click(object sender, EventArgs e)
         {
@@ -739,9 +929,41 @@ namespace WebsiteTracker
             this.Close();
         }
 
-        /*************************************************************************/
-        // MENUITEMS : LIST
-        /*************************************************************************/
+        private void menuItem_BackupList_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+
+            dlg.Filter = "Website Tracker List File (*.wtlst)|*.wtlst|All files (*.*)|*.*";
+            dlg.FilterIndex = 1;
+            dlg.RestoreDirectory = true;
+
+            if (dlg.ShowDialog() == DialogResult.OK)
+            {
+                SaveList(dlg.FileName);
+            }
+        }
+
+        private void menuItem_RestoreList_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Website Tracker List File (*.wtlst)|*.wtlst|All files (*.*)|*.*";
+            DialogResult result = dlg.ShowDialog();
+
+            if (File.Exists(dlg.FileName))
+            {
+                var msgResult = MessageBox.Show("Are you sure you want to restore current list with \"" + Path.GetFileName(dlg.FileName) + "\"?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+
+                if (msgResult == DialogResult.Yes)
+                {
+                    LoadList(dlg.FileName);
+                    CheckItemsAndIconsAndMenus();
+                }
+            }
+        }
+
+        #endregion
+
+        #region MenuItems: List
 
         private void menuItem_CheckAll_Click(object sender, EventArgs e)
         {
@@ -771,11 +993,12 @@ namespace WebsiteTracker
                 item.SubItems.Add(form.ItemStop);
                 item.SubItems.Add(form.ItemChecksum);
                 item.SubItems.Add("-");
+                item.SubItems.Add("");
                 item.Tag = Status.NotUpdated;
 
                 lstItems.Items.Add(item);
-                SaveList();
-                CheckSelectedActions();
+                SaveList(listFile);
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -806,13 +1029,14 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text = form.ItemStop;
                     lstItems.SelectedItems[0].SubItems[ITEM_CHECKSUM].Text = form.ItemChecksum;
                     lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text = "-";
+                    lstItems.SelectedItems[0].SubItems[ITEM_STATUS].Text = "";
                     lstItems.SelectedItems[0].Tag = Status.NotUpdated;
                 }
 
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
 
-                SaveList();
-                CheckSelectedActions();
+                SaveList(listFile);
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -828,7 +1052,7 @@ namespace WebsiteTracker
                 if (result == DialogResult.Yes) lstItems.SelectedItems[0].Remove();
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
 
-                SaveList();
+                SaveList(listFile);
             }
         }
 
@@ -839,8 +1063,8 @@ namespace WebsiteTracker
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "X";
             }
 
-            CheckSelectedActions();
-            SaveList();
+            CheckItemsAndIconsAndMenus();
+            SaveList(listFile);
         }
 
         private void menuItem_List_Disable_Click(object sender, EventArgs e)
@@ -850,8 +1074,8 @@ namespace WebsiteTracker
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
             }
 
-            CheckSelectedActions();
-            SaveList();
+            CheckItemsAndIconsAndMenus();
+            SaveList(listFile);
         }
 
         private void menuItem_Clear_Changed_Click(object sender, EventArgs e)
@@ -861,8 +1085,8 @@ namespace WebsiteTracker
                 lstItems.SelectedItems[0].Tag = Status.NotUpdated;
             }
 
-            CheckSelectedActions();
-            SaveList();
+            CheckItemsAndIconsAndMenus();
+            SaveList(listFile);
         }
 
         private void menuItem_Open_Selected_Click(object sender, EventArgs e)
@@ -886,9 +1110,9 @@ namespace WebsiteTracker
             }
         }
 
-        /*************************************************************************/
-        // MENUITEMS : SETTINGS
-        /*************************************************************************/
+        #endregion
+
+        #region MenuItems: Settings
 
         private void menuItem_RememberWindowSize_Click(object sender, EventArgs e)
         {
@@ -958,7 +1182,7 @@ namespace WebsiteTracker
             form.UseCustom = setUseCustomBrowser;
             form.SelectedBrowser = setCustomBrowser;
             form.ShowDialog();
-            
+
             if (!form.Cancelled)
             {
                 setUseCustomBrowser = form.UseCustom;
@@ -979,7 +1203,7 @@ namespace WebsiteTracker
                 setNormalItemBold = dlg.Font.Bold;
                 setNormalItemItalic = dlg.Font.Italic;
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -995,7 +1219,7 @@ namespace WebsiteTracker
                 setUpdatedItemBold = dlg.Font.Bold;
                 setUpdatedItemItalic = dlg.Font.Italic;
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -1011,7 +1235,7 @@ namespace WebsiteTracker
                 setErrorItemBold = dlg.Font.Bold;
                 setErrorItemItalic = dlg.Font.Italic;
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -1025,7 +1249,7 @@ namespace WebsiteTracker
             {
                 setNormalItemColor = ColorTranslator.ToHtml(dlg.Color);
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -1039,7 +1263,7 @@ namespace WebsiteTracker
             {
                 setUpdatedItemColor = ColorTranslator.ToHtml(dlg.Color);
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -1053,18 +1277,19 @@ namespace WebsiteTracker
             {
                 setErrorItemColor = ColorTranslator.ToHtml(dlg.Color);
                 CreateFonts();
-                CheckSelectedActions();
+                CheckItemsAndIconsAndMenus();
             }
         }
 
-        /*************************************************************************/
-        // MENUITEMS : HELP
-        /*************************************************************************/
+        #endregion
+
+        #region MenuItems: Help
 
         private void menuItem_Help_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Help not available yet!", "Error");
         }
 
+        #endregion
     }
 }
