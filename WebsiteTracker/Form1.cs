@@ -13,8 +13,6 @@ namespace WebsiteTracker
 {
     public partial class Form1 : Form
     {
-        #region Fields
-
         private Settings settings = new Settings();
 
         private string logFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "check.log");
@@ -33,9 +31,10 @@ namespace WebsiteTracker
         private const int ITEM_START = 4;
         private const int ITEM_STOP = 5;
         private const int ITEM_CHECKSUM = 6;
-        private const int ITEM_LAST = 7;
-        private const int ITEM_STATUS = 8;
-        private const int ITEM_CHANGED = 9;
+        private const int ITEM_LASTCHECKED = 7;
+        private const int ITEM_LASTUPDATED = 8;
+        private const int ITEM_STATUS = 9;
+        private const int ITEM_CHANGED = 10;
 
         private const string TEXT_CHECKING = "Checking...";
 
@@ -49,7 +48,7 @@ namespace WebsiteTracker
         private bool formClosing = false;
         private bool formCloseNow = false;
 
-        private const int DEFAULT_WIDTH = 1257;
+        private const int DEFAULT_WIDTH = 1396;
         private const int DEFAULT_HEIGHT = 400;
         private const int MIN_WIDTH = 500;
         private const int MIN_HEIGHT = 200;
@@ -81,8 +80,6 @@ namespace WebsiteTracker
 
         private string setCustomBrowser;
         private bool setUseCustomBrowser;
-
-        #endregion
 
         private enum Status
         {
@@ -195,6 +192,7 @@ namespace WebsiteTracker
                 clmContentStop.Width = settings.LoadSetting("WidthColumnContentStop", "int", "125");
                 clmChecksum.Width = settings.LoadSetting("WidthColumnChecksum", "int", "256");
                 clmLastChecked.Width = settings.LoadSetting("WidthColumnLastChecked", "int", "140");
+                clmLastUpdated.Width = settings.LoadSetting("WidthColumnLastUpdated", "int", "140");
                 clmStatus.Width = settings.LoadSetting("WidthColumnStatus", "int", "66");
             }
 
@@ -206,6 +204,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
             settings.SaveSetting("WidthColumnChecksum", clmChecksum.Width.ToString());
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
+            settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
 
         }
@@ -269,6 +268,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
             settings.SaveSetting("WidthColumnChecksum", clmChecksum.Width.ToString());
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
+            settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
 
             if (this.WindowState == FormWindowState.Maximized) settings.SaveSetting("Maximized", "True");
@@ -311,7 +311,8 @@ namespace WebsiteTracker
                             item.SubItems.Add(list[ITEM_START].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_STOP].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_CHECKSUM]);
-                            item.SubItems.Add(list[ITEM_LAST]);
+                            item.SubItems.Add(list[ITEM_LASTCHECKED]);
+                            item.SubItems.Add(list[ITEM_LASTUPDATED]);
                             item.SubItems.Add(list[ITEM_STATUS]);
                             item.Tag = "";
 
@@ -356,7 +357,7 @@ namespace WebsiteTracker
                 {
                     foreach (ListViewItem item in lstItems.Items)
                     {
-                        if (item.SubItems[ITEM_LAST].Text == TEXT_CHECKING) item.SubItems[ITEM_LAST].Text = "-";
+                        if (item.SubItems[ITEM_LASTCHECKED].Text == TEXT_CHECKING) item.SubItems[ITEM_LASTCHECKED].Text = "-";
 
                         string name = item.SubItems[ITEM_NAME].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string enabled = item.SubItems[ITEM_ENABLED].Text;
@@ -365,11 +366,12 @@ namespace WebsiteTracker
                         string start = item.SubItems[ITEM_START].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string stop = item.SubItems[ITEM_STOP].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string checksum = item.SubItems[ITEM_CHECKSUM].Text;
-                        string last = item.SubItems[ITEM_LAST].Text;
+                        string lastChecked = item.SubItems[ITEM_LASTCHECKED].Text;
+                        string lastUpdated = item.SubItems[ITEM_LASTUPDATED].Text;
                         string status = item.SubItems[ITEM_STATUS].Text;
                         string changed = item.Tag.ToString();
 
-                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + last + listFileSeparator + status + listFileSeparator + changed);
+                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed);
                     }
                 }
             }
@@ -411,7 +413,7 @@ namespace WebsiteTracker
         {
             if (lstItems.SelectedItems.Count > 0)
             {
-                if (lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+                if (lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
                 {
                     menuItem_List_Delete.Enabled = true;
                     menuItem_List_Modify.Enabled = true;
@@ -661,13 +663,13 @@ namespace WebsiteTracker
         /// <param name="forceCheck">Force check even if item is disabled?</param>
         private void WatchItem(ListViewItem item, bool forceCheck)
         {
-            if (item.SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (item.SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 if (forceCheck || item.SubItems[ITEM_ENABLED].Text != "")
                 {
                     DateTime now = DateTime.Now;
                     DateTime lastCheck = DateTime.MinValue;
-                    DateTime.TryParse(item.SubItems[ITEM_LAST].Text, out lastCheck);
+                    DateTime.TryParse(item.SubItems[ITEM_LASTCHECKED].Text, out lastCheck);
 
                     Match m = Regex.Match(item.SubItems[ITEM_INTERVAL].Text, @"(\d+)d (\d+)h (\d+)m");
                     int days = Convert.ToInt32(m.Groups[1].Value);
@@ -676,9 +678,11 @@ namespace WebsiteTracker
 
                     DateTime nextCheck = lastCheck.AddDays(days).AddHours(hours).AddMinutes(minutes);
 
+                    if (item.Tag.ToString() == Status.Error.ToString()) nextCheck = lastCheck.AddMinutes(5);
+
                     if (now >= nextCheck || forceCheck)
                     {
-                        item.SubItems[ITEM_LAST].Text = TEXT_CHECKING;
+                        item.SubItems[ITEM_LASTCHECKED].Text = TEXT_CHECKING;
                         CheckItemsAndIconsAndMenus();
 
                         Thread thread = new Thread(() => CheckItem(item));
@@ -732,7 +736,7 @@ namespace WebsiteTracker
             {
                 if (!formClosing)
                 {
-                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_LASTCHECKED].Text = lastUpdated = DateTime.Now.ToString(dateString);
                     item.SubItems[ITEM_STATUS].Text = "OK";
 
                     if (item.SubItems[ITEM_CHECKSUM].Text != "-")
@@ -741,6 +745,7 @@ namespace WebsiteTracker
                         {
                             item.SubItems[ITEM_CHECKSUM].Text = checksum;
                             item.Tag = Status.Updated;
+                            item.SubItems[ITEM_LASTUPDATED].Text = lastUpdated = DateTime.Now.ToString(dateString);
 
                             CheckItemsAndIconsAndMenus();
                             SaveList(listFile);
@@ -775,7 +780,7 @@ namespace WebsiteTracker
             {
                 if (!formClosing)
                 {
-                    item.SubItems[ITEM_LAST].Text = lastUpdated = DateTime.Now.ToString(dateString);
+                    item.SubItems[ITEM_LASTCHECKED].Text = lastUpdated = DateTime.Now.ToString(dateString);
                     item.SubItems[ITEM_STATUS].Text = "ERROR - " + error;
                     item.Tag = Status.Error;
 
@@ -903,14 +908,11 @@ namespace WebsiteTracker
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.F5)
-            {
-                WatchList(true);
-            }
+
         }
 
         #endregion
-        
+
         #region MenuItems: Tray
 
         private void menuItem_Show(object sender, EventArgs e)
@@ -993,6 +995,7 @@ namespace WebsiteTracker
                 item.SubItems.Add(form.ItemStop);
                 item.SubItems.Add(form.ItemChecksum);
                 item.SubItems.Add("-");
+                item.SubItems.Add("-");
                 item.SubItems.Add("");
                 item.Tag = Status.NotUpdated;
 
@@ -1004,7 +1007,7 @@ namespace WebsiteTracker
 
         private void menuItem_List_Modify_Click(object sender, EventArgs e)
         {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 string enabled = lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text;
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
@@ -1028,7 +1031,8 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_START].Text = form.ItemStart;
                     lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text = form.ItemStop;
                     lstItems.SelectedItems[0].SubItems[ITEM_CHECKSUM].Text = form.ItemChecksum;
-                    lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text = "-";
+                    lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text = "-";
+                    lstItems.SelectedItems[0].SubItems[ITEM_LASTUPDATED].Text = "-";
                     lstItems.SelectedItems[0].SubItems[ITEM_STATUS].Text = "";
                     lstItems.SelectedItems[0].Tag = Status.NotUpdated;
                 }
@@ -1042,7 +1046,7 @@ namespace WebsiteTracker
 
         private void menuItem_List_Delete_Click(object sender, EventArgs e)
         {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 string enabled = lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text;
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
@@ -1058,7 +1062,7 @@ namespace WebsiteTracker
 
         private void menuItem_List_Enable_Click(object sender, EventArgs e)
         {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "X";
             }
@@ -1069,7 +1073,7 @@ namespace WebsiteTracker
 
         private void menuItem_List_Disable_Click(object sender, EventArgs e)
         {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
             }
@@ -1080,7 +1084,7 @@ namespace WebsiteTracker
 
         private void menuItem_Clear_Changed_Click(object sender, EventArgs e)
         {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LAST].Text != TEXT_CHECKING)
+            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
                 lstItems.SelectedItems[0].Tag = Status.NotUpdated;
             }

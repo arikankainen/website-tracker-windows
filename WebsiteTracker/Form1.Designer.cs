@@ -95,6 +95,7 @@
             this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageListGlobe = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu1 = new System.Windows.Forms.ContextMenu();
@@ -148,6 +149,7 @@
             // menuItem_Exit
             // 
             this.menuItem_Exit.Index = 0;
+            this.menuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
             this.menuItem_Exit.Text = "Exit";
             this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
@@ -192,12 +194,14 @@
             // 
             this.menuItem_CheckSelected.Enabled = false;
             this.menuItem_CheckSelected.Index = 0;
+            this.menuItem_CheckSelected.Shortcut = System.Windows.Forms.Shortcut.CtrlF5;
             this.menuItem_CheckSelected.Text = "Check selected now";
             this.menuItem_CheckSelected.Click += new System.EventHandler(this.menuItem_CheckSelected_Click);
             // 
             // menuItem_CheckAll
             // 
             this.menuItem_CheckAll.Index = 1;
+            this.menuItem_CheckAll.Shortcut = System.Windows.Forms.Shortcut.F5;
             this.menuItem_CheckAll.Text = "Check all now";
             this.menuItem_CheckAll.Click += new System.EventHandler(this.menuItem_CheckAll_Click);
             // 
@@ -209,6 +213,7 @@
             // menuItem_List_New
             // 
             this.menuItem_List_New.Index = 3;
+            this.menuItem_List_New.Shortcut = System.Windows.Forms.Shortcut.CtrlN;
             this.menuItem_List_New.Text = "New...";
             this.menuItem_List_New.Click += new System.EventHandler(this.menuItem_List_New_Click);
             // 
@@ -216,6 +221,7 @@
             // 
             this.menuItem_List_Modify.Enabled = false;
             this.menuItem_List_Modify.Index = 4;
+            this.menuItem_List_Modify.Shortcut = System.Windows.Forms.Shortcut.CtrlM;
             this.menuItem_List_Modify.Text = "Modify...";
             this.menuItem_List_Modify.Click += new System.EventHandler(this.menuItem_List_Modify_Click);
             // 
@@ -223,6 +229,7 @@
             // 
             this.menuItem_List_Delete.Enabled = false;
             this.menuItem_List_Delete.Index = 5;
+            this.menuItem_List_Delete.Shortcut = System.Windows.Forms.Shortcut.Del;
             this.menuItem_List_Delete.Text = "Delete...";
             this.menuItem_List_Delete.Click += new System.EventHandler(this.menuItem_List_Delete_Click);
             // 
@@ -235,6 +242,7 @@
             // 
             this.menuItem_List_Enable.Enabled = false;
             this.menuItem_List_Enable.Index = 7;
+            this.menuItem_List_Enable.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
             this.menuItem_List_Enable.Text = "Enable";
             this.menuItem_List_Enable.Click += new System.EventHandler(this.menuItem_List_Enable_Click);
             // 
@@ -242,6 +250,7 @@
             // 
             this.menuItem_List_Disable.Enabled = false;
             this.menuItem_List_Disable.Index = 8;
+            this.menuItem_List_Disable.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
             this.menuItem_List_Disable.Text = "Disable";
             this.menuItem_List_Disable.Click += new System.EventHandler(this.menuItem_List_Disable_Click);
             // 
@@ -254,6 +263,7 @@
             // 
             this.menuItem_Clear_Changed.Enabled = false;
             this.menuItem_Clear_Changed.Index = 10;
+            this.menuItem_Clear_Changed.Shortcut = System.Windows.Forms.Shortcut.CtrlC;
             this.menuItem_Clear_Changed.Text = "Clear \"updated\" status";
             this.menuItem_Clear_Changed.Click += new System.EventHandler(this.menuItem_Clear_Changed_Click);
             // 
@@ -266,6 +276,7 @@
             // 
             this.menuItem_Open_Selected.Enabled = false;
             this.menuItem_Open_Selected.Index = 12;
+            this.menuItem_Open_Selected.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
             this.menuItem_Open_Selected.Text = "Open selected page";
             this.menuItem_Open_Selected.Click += new System.EventHandler(this.menuItem_Open_Selected_Click);
             // 
@@ -448,6 +459,7 @@
             // menuItem_Help
             // 
             this.menuItem_Help.Index = 0;
+            this.menuItem_Help.Shortcut = System.Windows.Forms.Shortcut.F1;
             this.menuItem_Help.Text = "Help";
             this.menuItem_Help.Click += new System.EventHandler(this.menuItem_Help_Click);
             // 
@@ -545,10 +557,10 @@
             this.clmContentStop,
             this.clmChecksum,
             this.clmLastChecked,
+            this.clmLastUpdated,
             this.clmStatus});
             this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
-            this.lstItems.HideSelection = false;
             this.lstItems.Location = new System.Drawing.Point(12, 12);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
@@ -603,6 +615,10 @@
             // 
             this.clmLastChecked.Text = "Last checked";
             this.clmLastChecked.Width = 126;
+            // 
+            // clmLastUpdated
+            // 
+            this.clmLastUpdated.Text = "Last updated";
             // 
             // clmStatus
             // 
@@ -890,6 +906,7 @@
         private System.Windows.Forms.MenuItem menuItem18;
         private System.Windows.Forms.MenuItem menuItem_BackupList;
         private System.Windows.Forms.MenuItem menuItem_RestoreList;
+        private System.Windows.Forms.ColumnHeader clmLastUpdated;
     }
 }
 
