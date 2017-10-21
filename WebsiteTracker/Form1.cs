@@ -38,6 +38,10 @@ namespace WebsiteTracker
 
         private const string TEXT_CHECKING = "Checking...";
 
+        private List<string> checkQueue = new List<string>();
+        private bool checkQueueActive = false;
+        private bool checkQueueForced = false;
+
         private int width;
         private int height;
         private int left;
@@ -84,8 +88,7 @@ namespace WebsiteTracker
         private enum Status
         {
             Updated,
-            NotUpdated,
-            Error
+            NotUpdated
         }
 
         public Form1()
@@ -323,18 +326,17 @@ namespace WebsiteTracker
                                 item.Tag = Status.Updated;
                             }
 
-                            if (list[ITEM_CHANGED] == Status.NotUpdated.ToString())
+                            else if (list[ITEM_CHANGED] == Status.NotUpdated.ToString())
                             {
                                 item.ForeColor = normalItemColor;
                                 item.Font = normalItemFont;
                                 item.Tag = Status.NotUpdated;
                             }
 
-                            else if (list[ITEM_CHANGED] == Status.Error.ToString())
+                            if (list[ITEM_STATUS].Contains("ERROR"))
                             {
                                 item.ForeColor = errorItemColor;
                                 item.Font = errorItemFont;
-                                item.Tag = Status.Error;
                             }
 
                             lstItems.Items.Add(item);
@@ -491,7 +493,15 @@ namespace WebsiteTracker
 
             foreach (ListViewItem item in lstItems.Items)
             {
-                if (item.Tag.ToString() == Status.Updated.ToString())
+                if (item.SubItems[ITEM_STATUS].Text.Contains("ERROR"))
+                {
+                    errors++;
+                    item.ImageKey = "updated_red";
+                    item.Font = errorItemFont;
+                    item.ForeColor = errorItemColor;
+                }
+
+                else if (item.Tag.ToString() == Status.Updated.ToString())
                 {
                     updated++;
                     item.ImageKey = "updated_color";
@@ -504,14 +514,6 @@ namespace WebsiteTracker
                     item.ImageKey = "updated_bw_light";
                     item.Font = normalItemFont;
                     item.ForeColor = normalItemColor;
-                }
-
-                else if (item.Tag.ToString() == Status.Error.ToString())
-                {
-                    errors++;
-                    item.ImageKey = "updated_red";
-                    item.Font = errorItemFont;
-                    item.ForeColor = errorItemColor;
                 }
 
                 if (item.SubItems[ITEM_ENABLED].Text != "")
@@ -605,17 +607,20 @@ namespace WebsiteTracker
         }
 
         /// <summary>
-        /// Clear item's "new" status
+        /// Clear item's "new" status if there is no error
         /// </summary>
         /// <param name="item">Item</param>
         private void ClearNewStatus(ListViewItem item)
         {
-            item.ForeColor = normalItemColor;
-            item.Font = normalItemFont;
-            item.Tag = Status.NotUpdated;
+            if (!item.SubItems[ITEM_STATUS].Text.Contains("ERROR"))
+            {
+                item.ForeColor = normalItemColor;
+                item.Font = normalItemFont;
+                item.Tag = Status.NotUpdated;
 
-            CheckItemsAndIconsAndMenus();
-            SaveList(listFile);
+                CheckItemsAndIconsAndMenus();
+                SaveList(listFile);
+            }
         }
 
         /// <summary>
@@ -639,21 +644,18 @@ namespace WebsiteTracker
             }
         }
 
-        /// <summary>
-        /// Iterate through list and send each item to check if update is needed
-        /// </summary>
-        /// <param name="forceCheck">Force check even if item is disabled?</param>
-        private void WatchList(bool forceCheck)
+        private void WatchList()
         {
-            try
+            timerCheckList.Stop();
+            timerCheckQueue.Stop();
+            checkQueue.Clear();
+
+            foreach (ListViewItem item in lstItems.Items)
             {
-                foreach (ListViewItem item in lstItems.Items)
-                {
-                    WatchItem(item, forceCheck);
-                }
+                if (item.SubItems[ITEM_ADDRESS].Text != "") checkQueue.Add(item.SubItems[ITEM_ADDRESS].Text);
             }
 
-            catch { }
+            timerCheckQueue.Start();
         }
 
         /// <summary>
@@ -678,7 +680,11 @@ namespace WebsiteTracker
 
                     DateTime nextCheck = lastCheck.AddDays(days).AddHours(hours).AddMinutes(minutes);
 
-                    if (item.Tag.ToString() == Status.Error.ToString()) nextCheck = lastCheck.AddMinutes(5);
+                    if (item.SubItems[ITEM_STATUS].Text.Contains("ERROR"))
+                    {
+                        DateTime errorCheck = lastCheck.AddMinutes(5);
+                        if (errorCheck < lastCheck) lastCheck = errorCheck;
+                    }
 
                     if (now >= nextCheck || forceCheck)
                     {
@@ -756,7 +762,6 @@ namespace WebsiteTracker
 
                         else
                         {
-                            if (item.Tag.ToString() == Status.Error.ToString()) item.Tag = Status.NotUpdated;
                             if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Page not updated  " + logString);
                         }
                     }
@@ -782,7 +787,6 @@ namespace WebsiteTracker
                 {
                     item.SubItems[ITEM_LASTCHECKED].Text = lastUpdated = DateTime.Now.ToString(dateString);
                     item.SubItems[ITEM_STATUS].Text = "ERROR - " + error;
-                    item.Tag = Status.Error;
 
                     if (menuItem_SaveLog.Checked) File.AppendAllText(logFile, "Failed to connect " + logString);
                     CheckItemsAndIconsAndMenus();
@@ -816,7 +820,39 @@ namespace WebsiteTracker
         /// <param name="e"></param>
         private void timerCheckList_Tick(object sender, EventArgs e)
         {
-            WatchList(false);
+            WatchList();
+        }
+
+        private void timerCheckQueue_Tick(object sender, EventArgs e)
+        {
+            if (checkQueue.Count > 0)
+            {
+                bool busy = false;
+                foreach (ListViewItem item in lstItems.Items)
+                {
+                    if (item.SubItems[ITEM_LASTCHECKED].Text == TEXT_CHECKING) busy = true;
+                }
+
+                if (!busy)
+                {
+                    foreach (ListViewItem item in lstItems.Items)
+                    {
+                        if (checkQueue.Contains(item.SubItems[ITEM_ADDRESS].Text))
+                        {
+                            checkQueue.Remove(item.SubItems[ITEM_ADDRESS].Text);
+                            WatchItem(item, checkQueueForced);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                checkQueueForced = false;
+                timerCheckQueue.Stop();
+                timerCheckList.Start();
+            }
         }
 
         #region Events
@@ -969,7 +1005,9 @@ namespace WebsiteTracker
 
         private void menuItem_CheckAll_Click(object sender, EventArgs e)
         {
-            WatchList(true);
+            //WatchList(true);
+            checkQueueForced = true;
+            WatchList();
         }
 
         private void menuItem_CheckSelected_Click(object sender, EventArgs e)
@@ -1295,5 +1333,6 @@ namespace WebsiteTracker
         }
 
         #endregion
+
     }
 }

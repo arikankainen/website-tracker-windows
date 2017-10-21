@@ -81,7 +81,7 @@ namespace WebsiteTracker
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 5 * 1000;
+            w.Timeout = 30 * 1000;
             return w;
         }
     }

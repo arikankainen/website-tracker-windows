@@ -120,6 +120,7 @@
             this.menuItem_T_Open_All = new System.Windows.Forms.MenuItem();
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
+            this.timerCheckQueue = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
@@ -784,6 +785,10 @@
             this.menuItem_T_Exit.Text = "Exit";
             this.menuItem_T_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
+            // timerCheckQueue
+            // 
+            this.timerCheckQueue.Tick += new System.EventHandler(this.timerCheckQueue_Tick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -907,6 +912,7 @@
         private System.Windows.Forms.MenuItem menuItem_BackupList;
         private System.Windows.Forms.MenuItem menuItem_RestoreList;
         private System.Windows.Forms.ColumnHeader clmLastUpdated;
+        private System.Windows.Forms.Timer timerCheckQueue;
     }
 }
 
