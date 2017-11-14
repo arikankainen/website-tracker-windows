@@ -82,6 +82,14 @@ namespace WebsiteTracker
         {
             txtContent.Text = source;
             btnUpdateContent.Enabled = true;
+
+            if (txtName.Text == "") txtName.Text = ParseTitle();
+        }
+
+        private string ParseTitle()
+        {
+            Match m = Regex.Match(txtContent.Text, "<title>" + "(.*?)" + "</title>", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            return m.Groups[1].Value.Trim();
         }
 
         private void SetInterval(string text)
