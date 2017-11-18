@@ -130,6 +130,18 @@
   <data name="enabled_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\enabled_color.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="error_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\error_bw.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="error_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\error_color.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="updated_bw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\updated_bw.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="updated_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\updated_color.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="wt16_red" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\wt16_red.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

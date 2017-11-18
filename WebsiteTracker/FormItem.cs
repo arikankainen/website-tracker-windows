@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -24,13 +25,14 @@ namespace WebsiteTracker
         {
             get
             {
-                if (checkAutomatic.Checked) return "X";
+                if (checkAutomatic.Checked) return "Yes";
                 else return "";
             }
 
             set
             {
                 if (value != "") checkAutomatic.Checked = true;
+                else checkAutomatic.Checked = false;
             }
         }
 
@@ -64,6 +66,7 @@ namespace WebsiteTracker
         }
 
         private Thread thread;
+        private Color errorColor = Color.FromArgb(255, 200, 200);
 
         public FormItem()
         {
@@ -80,10 +83,12 @@ namespace WebsiteTracker
 
         private void UpdateContent(string source)
         {
-            txtContent.Text = source;
+            richTextBox1.Text = txtContent.Text = source;
             btnUpdateContent.Enabled = true;
 
             if (txtName.Text == "") txtName.Text = ParseTitle();
+
+            UpdateRTB();
         }
 
         private string ParseTitle()
@@ -123,6 +128,7 @@ namespace WebsiteTracker
         {
             if (txtAddress.Text != "")
             {
+                if (!txtAddress.Text.Contains(@"://")) txtAddress.Text = "http://" + txtAddress.Text;
                 btnUpdateContent.Enabled = false;
                 txtContent.Text = "Updating content...";
 
@@ -153,22 +159,98 @@ namespace WebsiteTracker
 
             if (txtName.Text != "" && txtAddress.Text != "" && txtContent.Text != "" && txtResult.Text != "" && (numericDays.Value > 0 || numericHours.Value > 0 || numericMinutes.Value > 0)) btnOk.Enabled = true;
             else btnOk.Enabled = false;
+
+            UpdateRTB();
+        }
+
+        private void UpdateRTB()
+        {
+            richTextBox1.SelectionStart = 0;
+            richTextBox1.SelectionLength = richTextBox1.TextLength;
+            richTextBox1.SelectionColor = System.Drawing.Color.Black;
+
+            int selectionStart, selectionStartLen;
+
+            selectionStart = richTextBox1.Text.IndexOf(txtStart.Text);
+
+            if (selectionStart > -1)
+            {
+                selectionStartLen = txtStart.TextLength;
+                richTextBox1.SelectionStart = selectionStart;
+                richTextBox1.SelectionLength = selectionStartLen;
+                richTextBox1.SelectionColor = System.Drawing.Color.Red;
+            }
+
+            int selectionEnd, selectionEndLen;
+            int endBegin = 0;
+
+            if (selectionStart > -1) endBegin = selectionStart + txtStart.TextLength;
+
+            selectionEnd = richTextBox1.Text.IndexOf(txtStop.Text, endBegin);
+            if (selectionEnd == endBegin) selectionEnd = -1;
+
+            if (selectionEnd > -1)
+            {
+                selectionEndLen = txtStop.TextLength;
+                richTextBox1.SelectionStart = selectionEnd;
+                richTextBox1.SelectionLength = selectionEndLen;
+                richTextBox1.SelectionColor = System.Drawing.Color.Red;
+            }
+
+            bool error = false;
+
+            if (txtStart.Text != "" && selectionStart == -1)
+            {
+                error = true;
+                txtStart.BackColor = errorColor;
+            }
+
+            else txtStart.BackColor = Color.White;
+
+            if (txtStop.Text != "" && selectionEnd == -1)
+            {
+                error = true;
+                txtStop.BackColor = errorColor;
+            }
+            else txtStop.BackColor = Color.White;
+
+            if (!error)
+            {
+
+                int selection = 0, selectionLen = 0;
+
+                if (selectionStart > -1) selection = selectionStart + txtStart.TextLength;
+
+                if (selectionEnd > -1) selectionLen = selectionEnd - selection;
+                else selectionLen = richTextBox1.TextLength - selection;
+
+                richTextBox1.SelectionStart = selection;
+                richTextBox1.SelectionLength = selectionLen;
+                richTextBox1.SelectionColor = System.Drawing.Color.Blue;
+            }
+
+            richTextBox1.DeselectAll();
         }
 
         private void btnUseStart_Click(object sender, EventArgs e)
         {
-            txtStart.Text = txtContent.SelectedText;
+            txtStart.Text = richTextBox1.SelectedText;
         }
 
         private void btnUseStop_Click(object sender, EventArgs e)
         {
-            txtStop.Text = txtContent.SelectedText;
+            txtStop.Text = richTextBox1.SelectedText;
         }
 
         private void txtContent_SelectionChanged(object sender, EventArgs e)
         {
             if (txtContent.SelectedText.Length > 0) btnUseStart.Enabled = btnUseStop.Enabled = true;
             else btnUseStart.Enabled = btnUseStop.Enabled = false;
+        }
+
+        private void txtAddress_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) btnUpdateContent.PerformClick();
         }
     }
 }

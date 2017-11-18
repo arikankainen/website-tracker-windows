@@ -45,7 +45,6 @@
             this.menuItem_List_Delete = new System.Windows.Forms.MenuItem();
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.menuItem_List_Enable = new System.Windows.Forms.MenuItem();
-            this.menuItem_List_Disable = new System.Windows.Forms.MenuItem();
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem_Clear_Changed = new System.Windows.Forms.MenuItem();
             this.menuItem14 = new System.Windows.Forms.MenuItem();
@@ -86,17 +85,6 @@
             this.statusLastChecked = new System.Windows.Forms.StatusBarPanel();
             this.timerCheckList = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.lstItems = new WebsiteTracker.VisualStylesListView();
-            this.clmName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmInterval = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmContentStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageListGlobe = new System.Windows.Forms.ImageList(this.components);
             this.contextMenu1 = new System.Windows.Forms.ContextMenu();
             this.menuItem_C_CheckSelected = new System.Windows.Forms.MenuItem();
@@ -107,7 +95,6 @@
             this.menuItem_C_List_Delete = new System.Windows.Forms.MenuItem();
             this.menuItem17 = new System.Windows.Forms.MenuItem();
             this.menuItem_C_List_Enable = new System.Windows.Forms.MenuItem();
-            this.menuItem_C_List_Disable = new System.Windows.Forms.MenuItem();
             this.menuItem20 = new System.Windows.Forms.MenuItem();
             this.menuItem_C_Clear_Changed = new System.Windows.Forms.MenuItem();
             this.menuItem9 = new System.Windows.Forms.MenuItem();
@@ -121,12 +108,34 @@
             this.menuItem19 = new System.Windows.Forms.MenuItem();
             this.menuItem_T_Exit = new System.Windows.Forms.MenuItem();
             this.timerCheckQueue = new System.Windows.Forms.Timer(this.components);
+            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.btnCheckSelected = new System.Windows.Forms.ToolStripButton();
+            this.btnCheckAll = new System.Windows.Forms.ToolStripButton();
+            this.btnNew = new System.Windows.Forms.ToolStripButton();
+            this.btnModify = new System.Windows.Forms.ToolStripButton();
+            this.btnDelete = new System.Windows.Forms.ToolStripButton();
+            this.btnEnable = new System.Windows.Forms.ToolStripButton();
+            this.btnClearUpdated = new System.Windows.Forms.ToolStripButton();
+            this.btnOpenSelected = new System.Windows.Forms.ToolStripButton();
+            this.btnOpenAllUpdatedPages = new System.Windows.Forms.ToolStripButton();
+            this.lstItems = new WebsiteTracker.VisualStylesListView();
+            this.clmName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmInterval = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmContentStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusLastChecked)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainMenu1
@@ -183,7 +192,6 @@
             this.menuItem_List_Delete,
             this.menuItem7,
             this.menuItem_List_Enable,
-            this.menuItem_List_Disable,
             this.menuItem1,
             this.menuItem_Clear_Changed,
             this.menuItem14,
@@ -196,14 +204,14 @@
             this.menuItem_CheckSelected.Enabled = false;
             this.menuItem_CheckSelected.Index = 0;
             this.menuItem_CheckSelected.Shortcut = System.Windows.Forms.Shortcut.CtrlF5;
-            this.menuItem_CheckSelected.Text = "Check selected now";
+            this.menuItem_CheckSelected.Text = "Check selected";
             this.menuItem_CheckSelected.Click += new System.EventHandler(this.menuItem_CheckSelected_Click);
             // 
             // menuItem_CheckAll
             // 
             this.menuItem_CheckAll.Index = 1;
             this.menuItem_CheckAll.Shortcut = System.Windows.Forms.Shortcut.F5;
-            this.menuItem_CheckAll.Text = "Check all now";
+            this.menuItem_CheckAll.Text = "Check all";
             this.menuItem_CheckAll.Click += new System.EventHandler(this.menuItem_CheckAll_Click);
             // 
             // menuItem5
@@ -244,39 +252,31 @@
             this.menuItem_List_Enable.Enabled = false;
             this.menuItem_List_Enable.Index = 7;
             this.menuItem_List_Enable.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
-            this.menuItem_List_Enable.Text = "Enable";
+            this.menuItem_List_Enable.Text = "Enabled";
             this.menuItem_List_Enable.Click += new System.EventHandler(this.menuItem_List_Enable_Click);
-            // 
-            // menuItem_List_Disable
-            // 
-            this.menuItem_List_Disable.Enabled = false;
-            this.menuItem_List_Disable.Index = 8;
-            this.menuItem_List_Disable.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
-            this.menuItem_List_Disable.Text = "Disable";
-            this.menuItem_List_Disable.Click += new System.EventHandler(this.menuItem_List_Disable_Click);
             // 
             // menuItem1
             // 
-            this.menuItem1.Index = 9;
+            this.menuItem1.Index = 8;
             this.menuItem1.Text = "-";
             // 
             // menuItem_Clear_Changed
             // 
             this.menuItem_Clear_Changed.Enabled = false;
-            this.menuItem_Clear_Changed.Index = 10;
+            this.menuItem_Clear_Changed.Index = 9;
             this.menuItem_Clear_Changed.Shortcut = System.Windows.Forms.Shortcut.CtrlC;
             this.menuItem_Clear_Changed.Text = "Clear \"updated\" status";
             this.menuItem_Clear_Changed.Click += new System.EventHandler(this.menuItem_Clear_Changed_Click);
             // 
             // menuItem14
             // 
-            this.menuItem14.Index = 11;
+            this.menuItem14.Index = 10;
             this.menuItem14.Text = "-";
             // 
             // menuItem_Open_Selected
             // 
             this.menuItem_Open_Selected.Enabled = false;
-            this.menuItem_Open_Selected.Index = 12;
+            this.menuItem_Open_Selected.Index = 11;
             this.menuItem_Open_Selected.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
             this.menuItem_Open_Selected.Text = "Open selected page";
             this.menuItem_Open_Selected.Click += new System.EventHandler(this.menuItem_Open_Selected_Click);
@@ -284,7 +284,7 @@
             // menuItem_Open_All
             // 
             this.menuItem_Open_All.Enabled = false;
-            this.menuItem_Open_All.Index = 13;
+            this.menuItem_Open_All.Index = 12;
             this.menuItem_Open_All.Text = "Open all updated pages";
             this.menuItem_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
@@ -466,7 +466,7 @@
             // 
             // statusBar1
             // 
-            this.statusBar1.Location = new System.Drawing.Point(0, 276);
+            this.statusBar1.Location = new System.Drawing.Point(0, 249);
             this.statusBar1.Name = "statusBar1";
             this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusUpdatedItems,
@@ -490,6 +490,7 @@
             // 
             // statusErrorItems
             // 
+            this.statusErrorItems.Alignment = System.Windows.Forms.HorizontalAlignment.Center;
             this.statusErrorItems.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Contents;
             this.statusErrorItems.BorderStyle = System.Windows.Forms.StatusBarPanelBorderStyle.None;
             this.statusErrorItems.Name = "statusErrorItems";
@@ -544,88 +545,6 @@
             this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.notifyIcon1_BalloonTipClicked);
             this.notifyIcon1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseClick);
             // 
-            // lstItems
-            // 
-            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lstItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.clmName,
-            this.clmEnabled,
-            this.clmAddress,
-            this.clmInterval,
-            this.clmContentStart,
-            this.clmContentStop,
-            this.clmChecksum,
-            this.clmLastChecked,
-            this.clmLastUpdated,
-            this.clmStatus});
-            this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            this.lstItems.FullRowSelect = true;
-            this.lstItems.Location = new System.Drawing.Point(12, 12);
-            this.lstItems.MultiSelect = false;
-            this.lstItems.Name = "lstItems";
-            this.lstItems.ShowItemToolTips = true;
-            this.lstItems.Size = new System.Drawing.Size(1238, 252);
-            this.lstItems.SmallImageList = this.imageListGlobe;
-            this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lstItems.TabIndex = 0;
-            this.lstItems.UseCompatibleStateImageBehavior = false;
-            this.lstItems.View = System.Windows.Forms.View.Details;
-            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
-            this.lstItems.DoubleClick += new System.EventHandler(this.lstItems_DoubleClick);
-            this.lstItems.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lstItems_MouseUp);
-            // 
-            // clmName
-            // 
-            this.clmName.Text = "Name";
-            this.clmName.Width = 165;
-            // 
-            // clmEnabled
-            // 
-            this.clmEnabled.Text = "Enabled";
-            this.clmEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.clmEnabled.Width = 52;
-            // 
-            // clmAddress
-            // 
-            this.clmAddress.Text = "Address";
-            this.clmAddress.Width = 248;
-            // 
-            // clmInterval
-            // 
-            this.clmInterval.Text = "Interval";
-            this.clmInterval.Width = 107;
-            // 
-            // clmContentStart
-            // 
-            this.clmContentStart.Text = "Content start";
-            this.clmContentStart.Width = 125;
-            // 
-            // clmContentStop
-            // 
-            this.clmContentStop.Text = "Content stop";
-            this.clmContentStop.Width = 114;
-            // 
-            // clmChecksum
-            // 
-            this.clmChecksum.Text = "Checksum";
-            this.clmChecksum.Width = 111;
-            // 
-            // clmLastChecked
-            // 
-            this.clmLastChecked.Text = "Last checked";
-            this.clmLastChecked.Width = 126;
-            // 
-            // clmLastUpdated
-            // 
-            this.clmLastUpdated.Text = "Last updated";
-            // 
-            // clmStatus
-            // 
-            this.clmStatus.Text = "Status";
-            this.clmStatus.Width = 153;
-            // 
             // imageListGlobe
             // 
             this.imageListGlobe.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListGlobe.ImageStream")));
@@ -634,6 +553,9 @@
             this.imageListGlobe.Images.SetKeyName(1, "updated_bw");
             this.imageListGlobe.Images.SetKeyName(2, "updated_color");
             this.imageListGlobe.Images.SetKeyName(3, "updated_red");
+            this.imageListGlobe.Images.SetKeyName(4, "normal");
+            this.imageListGlobe.Images.SetKeyName(5, "updated");
+            this.imageListGlobe.Images.SetKeyName(6, "error");
             // 
             // contextMenu1
             // 
@@ -646,7 +568,6 @@
             this.menuItem_C_List_Delete,
             this.menuItem17,
             this.menuItem_C_List_Enable,
-            this.menuItem_C_List_Disable,
             this.menuItem20,
             this.menuItem_C_Clear_Changed,
             this.menuItem9,
@@ -657,13 +578,13 @@
             // 
             this.menuItem_C_CheckSelected.Enabled = false;
             this.menuItem_C_CheckSelected.Index = 0;
-            this.menuItem_C_CheckSelected.Text = "Check selected now";
+            this.menuItem_C_CheckSelected.Text = "Check selected";
             this.menuItem_C_CheckSelected.Click += new System.EventHandler(this.menuItem_CheckSelected_Click);
             // 
             // menuItem_C_CheckAll
             // 
             this.menuItem_C_CheckAll.Index = 1;
-            this.menuItem_C_CheckAll.Text = "Check all now";
+            this.menuItem_C_CheckAll.Text = "Check all";
             this.menuItem_C_CheckAll.Click += new System.EventHandler(this.menuItem_CheckAll_Click);
             // 
             // menuItem13
@@ -700,44 +621,37 @@
             // 
             this.menuItem_C_List_Enable.Enabled = false;
             this.menuItem_C_List_Enable.Index = 7;
-            this.menuItem_C_List_Enable.Text = "Enable";
+            this.menuItem_C_List_Enable.Text = "Enabled";
             this.menuItem_C_List_Enable.Click += new System.EventHandler(this.menuItem_List_Enable_Click);
-            // 
-            // menuItem_C_List_Disable
-            // 
-            this.menuItem_C_List_Disable.Enabled = false;
-            this.menuItem_C_List_Disable.Index = 8;
-            this.menuItem_C_List_Disable.Text = "Disable";
-            this.menuItem_C_List_Disable.Click += new System.EventHandler(this.menuItem_List_Disable_Click);
             // 
             // menuItem20
             // 
-            this.menuItem20.Index = 9;
+            this.menuItem20.Index = 8;
             this.menuItem20.Text = "-";
             // 
             // menuItem_C_Clear_Changed
             // 
             this.menuItem_C_Clear_Changed.Enabled = false;
-            this.menuItem_C_Clear_Changed.Index = 10;
+            this.menuItem_C_Clear_Changed.Index = 9;
             this.menuItem_C_Clear_Changed.Text = "Clear \"updated\" status";
             this.menuItem_C_Clear_Changed.Click += new System.EventHandler(this.menuItem_Clear_Changed_Click);
             // 
             // menuItem9
             // 
-            this.menuItem9.Index = 11;
+            this.menuItem9.Index = 10;
             this.menuItem9.Text = "-";
             // 
             // menuItem_C_Open_Selected
             // 
             this.menuItem_C_Open_Selected.Enabled = false;
-            this.menuItem_C_Open_Selected.Index = 12;
+            this.menuItem_C_Open_Selected.Index = 11;
             this.menuItem_C_Open_Selected.Text = "Open selected page";
             this.menuItem_C_Open_Selected.Click += new System.EventHandler(this.menuItem_Open_Selected_Click);
             // 
             // menuItem_C_Open_All
             // 
             this.menuItem_C_Open_All.Enabled = false;
-            this.menuItem_C_Open_All.Index = 13;
+            this.menuItem_C_Open_All.Index = 12;
             this.menuItem_C_Open_All.Text = "Open all updated pages";
             this.menuItem_C_Open_All.Click += new System.EventHandler(this.menuItem_Open_All_Click);
             // 
@@ -789,11 +703,212 @@
             // 
             this.timerCheckQueue.Tick += new System.EventHandler(this.timerCheckQueue_Tick);
             // 
+            // toolStrip1
+            // 
+            this.toolStrip1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.toolStrip1.AutoSize = false;
+            this.toolStrip1.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnCheckSelected,
+            this.btnCheckAll,
+            this.btnNew,
+            this.btnModify,
+            this.btnDelete,
+            this.btnEnable,
+            this.btnClearUpdated,
+            this.btnOpenSelected,
+            this.btnOpenAllUpdatedPages});
+            this.toolStrip1.Location = new System.Drawing.Point(12, 4);
+            this.toolStrip1.Name = "toolStrip1";
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.Size = new System.Drawing.Size(1238, 25);
+            this.toolStrip1.TabIndex = 2;
+            this.toolStrip1.Text = "toolStrip1";
+            // 
+            // btnCheckSelected
+            // 
+            this.btnCheckSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCheckSelected.Image = ((System.Drawing.Image)(resources.GetObject("btnCheckSelected.Image")));
+            this.btnCheckSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCheckSelected.Name = "btnCheckSelected";
+            this.btnCheckSelected.Size = new System.Drawing.Size(23, 22);
+            this.btnCheckSelected.Text = "Check selected";
+            this.btnCheckSelected.Click += new System.EventHandler(this.btnCheckSelected_Click);
+            // 
+            // btnCheckAll
+            // 
+            this.btnCheckAll.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCheckAll.Image = ((System.Drawing.Image)(resources.GetObject("btnCheckAll.Image")));
+            this.btnCheckAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCheckAll.Name = "btnCheckAll";
+            this.btnCheckAll.Size = new System.Drawing.Size(23, 22);
+            this.btnCheckAll.Text = "Check all";
+            this.btnCheckAll.Click += new System.EventHandler(this.btnCheckAll_Click);
+            // 
+            // btnNew
+            // 
+            this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNew.Image = ((System.Drawing.Image)(resources.GetObject("btnNew.Image")));
+            this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNew.Margin = new System.Windows.Forms.Padding(20, 1, 0, 2);
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(23, 22);
+            this.btnNew.Text = "New...";
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // btnModify
+            // 
+            this.btnModify.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnModify.Image = ((System.Drawing.Image)(resources.GetObject("btnModify.Image")));
+            this.btnModify.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnModify.Name = "btnModify";
+            this.btnModify.Size = new System.Drawing.Size(23, 22);
+            this.btnModify.Text = "Modify...";
+            this.btnModify.Click += new System.EventHandler(this.btnModify_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnDelete.Image = ((System.Drawing.Image)(resources.GetObject("btnDelete.Image")));
+            this.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(23, 22);
+            this.btnDelete.Text = "Delete...";
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnEnable
+            // 
+            this.btnEnable.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEnable.Image = ((System.Drawing.Image)(resources.GetObject("btnEnable.Image")));
+            this.btnEnable.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEnable.Margin = new System.Windows.Forms.Padding(20, 1, 0, 2);
+            this.btnEnable.Name = "btnEnable";
+            this.btnEnable.Size = new System.Drawing.Size(23, 22);
+            this.btnEnable.Text = "Enable";
+            this.btnEnable.Click += new System.EventHandler(this.btnEnable_Click);
+            // 
+            // btnClearUpdated
+            // 
+            this.btnClearUpdated.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnClearUpdated.Image = ((System.Drawing.Image)(resources.GetObject("btnClearUpdated.Image")));
+            this.btnClearUpdated.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnClearUpdated.Margin = new System.Windows.Forms.Padding(20, 1, 0, 2);
+            this.btnClearUpdated.Name = "btnClearUpdated";
+            this.btnClearUpdated.Size = new System.Drawing.Size(23, 22);
+            this.btnClearUpdated.Text = "Clear \"updated\" status";
+            this.btnClearUpdated.Click += new System.EventHandler(this.btnClearUpdated_Click);
+            // 
+            // btnOpenSelected
+            // 
+            this.btnOpenSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnOpenSelected.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenSelected.Image")));
+            this.btnOpenSelected.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpenSelected.Margin = new System.Windows.Forms.Padding(20, 1, 0, 2);
+            this.btnOpenSelected.Name = "btnOpenSelected";
+            this.btnOpenSelected.Size = new System.Drawing.Size(23, 22);
+            this.btnOpenSelected.Text = "Open selected page";
+            this.btnOpenSelected.Click += new System.EventHandler(this.btnOpenSelected_Click);
+            // 
+            // btnOpenAllUpdatedPages
+            // 
+            this.btnOpenAllUpdatedPages.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnOpenAllUpdatedPages.Image = ((System.Drawing.Image)(resources.GetObject("btnOpenAllUpdatedPages.Image")));
+            this.btnOpenAllUpdatedPages.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnOpenAllUpdatedPages.Name = "btnOpenAllUpdatedPages";
+            this.btnOpenAllUpdatedPages.Size = new System.Drawing.Size(23, 22);
+            this.btnOpenAllUpdatedPages.Text = "Open all updated pages";
+            this.btnOpenAllUpdatedPages.Click += new System.EventHandler(this.btnOpenAllUpdatedPages_Click);
+            // 
+            // lstItems
+            // 
+            this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstItems.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmName,
+            this.clmEnabled,
+            this.clmAddress,
+            this.clmInterval,
+            this.clmContentStart,
+            this.clmContentStop,
+            this.clmChecksum,
+            this.clmLastChecked,
+            this.clmLastUpdated,
+            this.clmStatus});
+            this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lstItems.FullRowSelect = true;
+            this.lstItems.Location = new System.Drawing.Point(12, 33);
+            this.lstItems.MultiSelect = false;
+            this.lstItems.Name = "lstItems";
+            this.lstItems.ShowItemToolTips = true;
+            this.lstItems.Size = new System.Drawing.Size(1238, 204);
+            this.lstItems.SmallImageList = this.imageListGlobe;
+            this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lstItems.TabIndex = 0;
+            this.lstItems.UseCompatibleStateImageBehavior = false;
+            this.lstItems.View = System.Windows.Forms.View.Details;
+            this.lstItems.SelectedIndexChanged += new System.EventHandler(this.lstItems_SelectedIndexChanged);
+            this.lstItems.DoubleClick += new System.EventHandler(this.lstItems_DoubleClick);
+            this.lstItems.MouseUp += new System.Windows.Forms.MouseEventHandler(this.lstItems_MouseUp);
+            // 
+            // clmName
+            // 
+            this.clmName.Text = "Name";
+            this.clmName.Width = 165;
+            // 
+            // clmEnabled
+            // 
+            this.clmEnabled.Text = "Enabled";
+            this.clmEnabled.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.clmEnabled.Width = 52;
+            // 
+            // clmAddress
+            // 
+            this.clmAddress.Text = "Address";
+            this.clmAddress.Width = 221;
+            // 
+            // clmInterval
+            // 
+            this.clmInterval.Text = "Interval";
+            this.clmInterval.Width = 107;
+            // 
+            // clmContentStart
+            // 
+            this.clmContentStart.Text = "Content start";
+            this.clmContentStart.Width = 125;
+            // 
+            // clmContentStop
+            // 
+            this.clmContentStop.Text = "Content stop";
+            this.clmContentStop.Width = 114;
+            // 
+            // clmChecksum
+            // 
+            this.clmChecksum.Text = "Checksum";
+            this.clmChecksum.Width = 111;
+            // 
+            // clmLastChecked
+            // 
+            this.clmLastChecked.Text = "Last checked";
+            this.clmLastChecked.Width = 126;
+            // 
+            // clmLastUpdated
+            // 
+            this.clmLastUpdated.Text = "Last updated";
+            // 
+            // clmStatus
+            // 
+            this.clmStatus.Text = "Status";
+            this.clmStatus.Width = 153;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 298);
+            this.ClientSize = new System.Drawing.Size(1262, 271);
+            this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusBar1);
             this.Controls.Add(this.lstItems);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -816,6 +931,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.statusDisabledItems)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusDummy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusLastChecked)).EndInit();
+            this.toolStrip1.ResumeLayout(false);
+            this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -839,7 +956,6 @@
         private System.Windows.Forms.ColumnHeader clmEnabled;
         private System.Windows.Forms.MenuItem menuItem7;
         private System.Windows.Forms.MenuItem menuItem_List_Enable;
-        private System.Windows.Forms.MenuItem menuItem_List_Disable;
         private System.Windows.Forms.Timer timerCheckList;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem_Clear_Changed;
@@ -872,7 +988,6 @@
         private System.Windows.Forms.MenuItem menuItem_C_List_Delete;
         private System.Windows.Forms.MenuItem menuItem17;
         private System.Windows.Forms.MenuItem menuItem_C_List_Enable;
-        private System.Windows.Forms.MenuItem menuItem_C_List_Disable;
         private System.Windows.Forms.MenuItem menuItem20;
         private System.Windows.Forms.MenuItem menuItem_C_Clear_Changed;
         private System.Windows.Forms.MenuItem menuItem14;
@@ -913,6 +1028,16 @@
         private System.Windows.Forms.MenuItem menuItem_RestoreList;
         private System.Windows.Forms.ColumnHeader clmLastUpdated;
         private System.Windows.Forms.Timer timerCheckQueue;
+        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStripButton btnNew;
+        private System.Windows.Forms.ToolStripButton btnModify;
+        private System.Windows.Forms.ToolStripButton btnDelete;
+        private System.Windows.Forms.ToolStripButton btnEnable;
+        private System.Windows.Forms.ToolStripButton btnCheckSelected;
+        private System.Windows.Forms.ToolStripButton btnCheckAll;
+        private System.Windows.Forms.ToolStripButton btnClearUpdated;
+        private System.Windows.Forms.ToolStripButton btnOpenSelected;
+        private System.Windows.Forms.ToolStripButton btnOpenAllUpdatedPages;
     }
 }
 

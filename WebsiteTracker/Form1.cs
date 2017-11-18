@@ -96,6 +96,8 @@ namespace WebsiteTracker
             InitializeComponent();
             notifyIcon1.ContextMenu = contextMenuTray;
             statusUpdatedItems.Icon = Properties.Resources.wt_bw;
+
+            toolStrip1.Renderer = new MySR();
         }
 
         private void LoadSettings()
@@ -425,33 +427,43 @@ namespace WebsiteTracker
                     menuItem_C_List_Modify.Enabled = true;
                     menuItem_C_CheckSelected.Enabled = true;
                     menuItem_C_Open_Selected.Enabled = true;
+                    btnDelete.Enabled = true;
+                    btnModify.Enabled = true;
+                    btnCheckSelected.Enabled = true;
+                    btnOpenSelected.Enabled = true;
 
                     if (lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text != "")
                     {
-                        menuItem_List_Enable.Enabled = false;
-                        menuItem_List_Disable.Enabled = true;
-                        menuItem_C_List_Enable.Enabled = false;
-                        menuItem_C_List_Disable.Enabled = true;
+                        menuItem_List_Enable.Enabled = true;
+                        menuItem_List_Enable.Checked = true;
+                        menuItem_C_List_Enable.Enabled = true;
+                        menuItem_C_List_Enable.Checked = true;
+                        btnEnable.Enabled = true;
+                        btnEnable.Checked = true;
                     }
 
                     else
                     {
                         menuItem_List_Enable.Enabled = true;
-                        menuItem_List_Disable.Enabled = false;
+                        menuItem_List_Enable.Checked = false;
                         menuItem_C_List_Enable.Enabled = true;
-                        menuItem_C_List_Disable.Enabled = false;
+                        menuItem_C_List_Enable.Checked = false;
+                        btnEnable.Enabled = true;
+                        btnEnable.Checked = false;
                     }
 
                     if (lstItems.SelectedItems[0].Tag.ToString() == Status.Updated.ToString())
                     {
                         menuItem_Clear_Changed.Enabled = true;
                         menuItem_C_Clear_Changed.Enabled = true;
+                        btnClearUpdated.Enabled = true;
                     }
 
                     else
                     {
                         menuItem_Clear_Changed.Enabled = false;
                         menuItem_C_Clear_Changed.Enabled = false;
+                        btnClearUpdated.Enabled = false;
                     }
                 }
 
@@ -460,15 +472,18 @@ namespace WebsiteTracker
                     menuItem_List_Delete.Enabled = false;
                     menuItem_List_Modify.Enabled = false;
                     menuItem_List_Enable.Enabled = false;
-                    menuItem_List_Disable.Enabled = false;
                     menuItem_CheckSelected.Enabled = false;
                     menuItem_Open_Selected.Enabled = false;
                     menuItem_C_List_Delete.Enabled = false;
                     menuItem_C_List_Modify.Enabled = false;
                     menuItem_C_List_Enable.Enabled = false;
-                    menuItem_C_List_Disable.Enabled = false;
                     menuItem_C_CheckSelected.Enabled = false;
                     menuItem_C_Open_Selected.Enabled = false;
+                    btnDelete.Enabled = false;
+                    btnModify.Enabled = false;
+                    btnEnable.Enabled = false;
+                    btnCheckSelected.Enabled = false;
+                    btnOpenSelected.Enabled = false;
                 }
             }
 
@@ -477,13 +492,21 @@ namespace WebsiteTracker
                 menuItem_List_Delete.Enabled = false;
                 menuItem_List_Modify.Enabled = false;
                 menuItem_List_Enable.Enabled = false;
-                menuItem_List_Disable.Enabled = false;
+                menuItem_List_Enable.Checked = false;
                 menuItem_CheckSelected.Enabled = false;
+                menuItem_Open_Selected.Enabled = false;
                 menuItem_C_List_Delete.Enabled = false;
                 menuItem_C_List_Modify.Enabled = false;
                 menuItem_C_List_Enable.Enabled = false;
-                menuItem_C_List_Disable.Enabled = false;
+                menuItem_C_List_Enable.Checked = false;
                 menuItem_C_CheckSelected.Enabled = false;
+                menuItem_C_Open_Selected.Enabled = false;
+                btnDelete.Enabled = false;
+                btnModify.Enabled = false;
+                btnEnable.Enabled = false;
+                btnEnable.Checked = false;
+                btnCheckSelected.Enabled = false;
+                btnOpenSelected.Enabled = false;
             }
 
             int updated = 0;
@@ -496,7 +519,8 @@ namespace WebsiteTracker
                 if (item.SubItems[ITEM_STATUS].Text.Contains("ERROR"))
                 {
                     errors++;
-                    item.ImageKey = "updated_red";
+                    //item.ImageKey = "updated_red";
+                    item.ImageKey = "error";
                     item.Font = errorItemFont;
                     item.ForeColor = errorItemColor;
                 }
@@ -504,14 +528,17 @@ namespace WebsiteTracker
                 else if (item.Tag.ToString() == Status.Updated.ToString())
                 {
                     updated++;
-                    item.ImageKey = "updated_color";
+                    //item.ImageKey = "updated_color";
+                    item.ImageKey = "updated";
                     item.Font = updatedItemFont;
                     item.ForeColor = updatedItemColor;
                 }
 
                 else if (item.Tag.ToString() == Status.NotUpdated.ToString())
                 {
-                    item.ImageKey = "updated_bw_light";
+                    //item.ImageKey = "updated_bw_light";
+                    //item.ImageKey = "normal";
+                    item.ImageKey = null;
                     item.Font = normalItemFont;
                     item.ForeColor = normalItemColor;
                 }
@@ -538,8 +565,9 @@ namespace WebsiteTracker
                 menuItem_Open_All.Enabled = true;
                 menuItem_C_Open_All.Enabled = true;
                 menuItem_T_Open_All.Enabled = true;
+                btnOpenAllUpdatedPages.Enabled = true;
                 notifyIcon1.Icon = Properties.Resources.wt_color;
-                statusUpdatedItems.Icon = Properties.Resources.wt_color;
+                statusUpdatedItems.Icon = Properties.Resources.updated_color;
             }
 
             else
@@ -547,25 +575,25 @@ namespace WebsiteTracker
                 menuItem_Open_All.Enabled = false;
                 menuItem_C_Open_All.Enabled = false;
                 menuItem_T_Open_All.Enabled = false;
+                btnOpenAllUpdatedPages.Enabled = false;
                 notifyIcon1.Icon = Properties.Resources.wt_bw;
-                statusUpdatedItems.Icon = Properties.Resources.wt_bw;
+                statusUpdatedItems.Icon = Properties.Resources.updated_bw;
             }
 
             if (errors > 0)
             {
-                statusErrorItems.Icon = Properties.Resources.wt16_red;
+                statusErrorItems.Icon = Properties.Resources.error_color;
 
             }
 
             else
             {
-                statusErrorItems.Icon = Properties.Resources.wt_bw;
+                statusErrorItems.Icon = Properties.Resources.error_bw;
             }
 
             if (enabled > 0)
             {
                 statusEnabledItems.Icon = Properties.Resources.enabled_color;
-                
             }
 
             else
@@ -1095,6 +1123,7 @@ namespace WebsiteTracker
                 else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = enabled;
 
                 SaveList(listFile);
+                CheckItemsAndIconsAndMenus();
             }
         }
 
@@ -1102,18 +1131,8 @@ namespace WebsiteTracker
         {
             if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
-                lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "X";
-            }
-
-            CheckItemsAndIconsAndMenus();
-            SaveList(listFile);
-        }
-
-        private void menuItem_List_Disable_Click(object sender, EventArgs e)
-        {
-            if (lstItems.SelectedItems.Count > 0 && lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
-            {
-                lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
+                if (lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text == "") lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "Yes";
+                else lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = "";
             }
 
             CheckItemsAndIconsAndMenus();
@@ -1333,6 +1352,67 @@ namespace WebsiteTracker
         }
 
         #endregion
+
+        #region Buttons
+
+        private void btnCheckSelected_Click(object sender, EventArgs e)
+        {
+            menuItem_CheckSelected.PerformClick();
+        }
+
+        private void btnCheckAll_Click(object sender, EventArgs e)
+        {
+            menuItem_CheckAll.PerformClick();
+        }
+
+        private void btnNew_Click(object sender, EventArgs e)
+        {
+            menuItem_List_New.PerformClick();
+        }
+
+        private void btnModify_Click(object sender, EventArgs e)
+        {
+            menuItem_List_Modify.PerformClick();
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            menuItem_List_Delete.PerformClick();
+        }
+
+        private void btnEnable_Click(object sender, EventArgs e)
+        {
+            menuItem_List_Enable.PerformClick();
+        }
+
+        private void btnClearUpdated_Click(object sender, EventArgs e)
+        {
+            menuItem_Clear_Changed.PerformClick();
+        }
+
+        private void btnOpenSelected_Click(object sender, EventArgs e)
+        {
+            menuItem_Open_Selected.PerformClick();
+        }
+
+        private void btnOpenAllUpdatedPages_Click(object sender, EventArgs e)
+        {
+            menuItem_Open_All.PerformClick();
+        } 
+
+        #endregion
+
+        // correcting a bug in the "system" renderer (white bottom line in toolstrip)
+        public class MySR : ToolStripSystemRenderer
+        {
+            public MySR() { }
+
+            protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+            {
+                //base.OnRenderToolStripBorder(e);
+            }
+        }
+
 
     }
 }
