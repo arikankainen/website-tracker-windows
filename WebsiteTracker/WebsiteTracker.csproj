@@ -39,9 +39,7 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
@@ -122,6 +120,7 @@
     <None Include="Resources\disabled_color.ico" />
     <None Include="Resources\enabled_bw.ico" />
     <None Include="Resources\enabled_color.ico" />
+    <None Include="Resources\updated32.png" />
     <Content Include="wt_color.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

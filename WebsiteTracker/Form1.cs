@@ -85,6 +85,9 @@ namespace WebsiteTracker
         private string setCustomBrowser;
         private bool setUseCustomBrowser;
 
+        private const string appName = "Website Tracker";
+        private Icon appIcon;
+
         private enum Status
         {
             Updated,
@@ -98,6 +101,7 @@ namespace WebsiteTracker
             statusUpdatedItems.Icon = Properties.Resources.wt_bw;
 
             toolStrip1.Renderer = new MySR();
+            appIcon = this.Icon;
         }
 
         private void LoadSettings()
@@ -507,6 +511,7 @@ namespace WebsiteTracker
                 btnEnable.Checked = false;
                 btnCheckSelected.Enabled = false;
                 btnOpenSelected.Enabled = false;
+                btnClearUpdated.Enabled = false;
             }
 
             int updated = 0;
@@ -568,6 +573,7 @@ namespace WebsiteTracker
                 btnOpenAllUpdatedPages.Enabled = true;
                 notifyIcon1.Icon = Properties.Resources.wt_color;
                 statusUpdatedItems.Icon = Properties.Resources.updated_color;
+                SetUpdatedTaskbarIcon();
             }
 
             else
@@ -578,6 +584,7 @@ namespace WebsiteTracker
                 btnOpenAllUpdatedPages.Enabled = false;
                 notifyIcon1.Icon = Properties.Resources.wt_bw;
                 statusUpdatedItems.Icon = Properties.Resources.updated_bw;
+                SetNormalTaskbarIcon();
             }
 
             if (errors > 0)
@@ -883,6 +890,38 @@ namespace WebsiteTracker
             }
         }
 
+        private void SetNormalTaskbarIcon()
+        {
+            this.Icon = appIcon;
+        }
+
+        private void SetUpdatedTaskbarIcon()
+        {
+            //Bitmap b1 = appIcon.ToBitmap();
+            //Bitmap b2 = Properties.Resources.updated32;
+
+            //using (Graphics g = Graphics.FromImage(b1))
+            //{
+            //    g.DrawImage(b2, 0, 0, 20, 20);
+            //}
+
+            //this.Icon = Icon.FromHandle(b1.GetHicon());
+
+
+
+            //Bitmap b1 = appIcon.ToBitmap();
+
+            //using (Graphics g = Graphics.FromImage(b1))
+            //{
+            //    Brush red = new SolidBrush(Color.FromArgb(255, 255, 50, 50));
+            //    Pen white = new Pen(Color.FromArgb(230, 255, 255, 255));
+            //    g.FillRectangle(red, 0, 0, 23, 23);
+            //    g.DrawRectangle(white, 0, 0, 23, 23);
+            //}
+
+            //this.Icon = Icon.FromHandle(b1.GetHicon());
+        }
+
         #region Events
 
         private void Form1_Load(object sender, EventArgs e)
@@ -892,6 +931,8 @@ namespace WebsiteTracker
             LoadScreenSettings();
             LoadList(listFile);
             CheckItemsAndIconsAndMenus();
+
+            SetUpdatedTaskbarIcon();
         }
 
         private void Form1_Shown(object sender, EventArgs e)

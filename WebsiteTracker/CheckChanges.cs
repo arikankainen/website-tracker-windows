@@ -20,6 +20,10 @@ namespace WebsiteTracker
         public static string GetResult(string content, string start, string stop)
         {
             if (content == "Updating content...") return "";
+
+            start = Regex.Escape(start);
+            stop = Regex.Escape(stop);
+
             if (start == "") start = "^";
             if (stop == "") stop = "$";
 
@@ -51,16 +55,19 @@ namespace WebsiteTracker
             {
                 using (MyWebClient wc = new MyWebClient())
                 {
+                    wc.Encoding = Encoding.UTF8;
                     wc.Proxy = null;
+
                     wc.Headers.Add("Content-Type", "text/html; charset=UTF-8");
                     wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36 OPR/48.0.2685.35");
-                    //wc.Headers.Add("", "");
-                    //wc.Headers.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-                    //wc.Headers.Add("Accept-Encoding", "gzip, deflate");
-                    //wc.Headers.Add("Accept-Language", "en-US,en;q=0.8");
+                    wc.Headers.Add("Accept-Encoding", "gzip, deflate");
+                    wc.Headers.Add("Accept-Language", "en-US,en;q=0.8");
+
                     Stream data = wc.OpenRead(address);
                     StreamReader reader = new StreamReader(data);
-                    return reader.ReadToEnd();
+
+                    string str = reader.ReadToEnd();
+                    return Regex.Replace(str, @"[\0|\00]", "");  // remove NULL characters
                 }
             }
 
@@ -72,6 +79,20 @@ namespace WebsiteTracker
 
     }
 
+    //class MyWebClient : WebClient
+    //{
+    //    protected override WebRequest GetWebRequest(Uri uri)
+    //    {
+    //        // for error: The request was aborted: Could not create SSL/TLS secure channel.
+    //        ServicePointManager.Expect100Continue = true;
+    //        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+    //        WebRequest w = base.GetWebRequest(uri);
+    //        w.Timeout = 30 * 1000;
+    //        return w;
+    //    }
+    //}
+
     class MyWebClient : WebClient
     {
         protected override WebRequest GetWebRequest(Uri uri)
@@ -80,21 +101,11 @@ namespace WebsiteTracker
             ServicePointManager.Expect100Continue = true;
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            WebRequest w = base.GetWebRequest(uri);
-            w.Timeout = 30 * 1000;
-            return w;
-        }
-    }
-
-    class AutomaticDecompressionWebClient : WebClient
-    {
-        protected override WebRequest GetWebRequest(Uri uri)
-        {
             var request = base.GetWebRequest(uri) as HttpWebRequest;
             request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+            request.Timeout = 30 * 1000;
             return request;
         }
     }
-
 
 }

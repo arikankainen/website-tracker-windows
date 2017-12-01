@@ -75,10 +75,15 @@ namespace WebsiteTracker
 
         private void UpdateContentAsync(string address)
         {
-            string source = CheckChanges.GetSource(address);
+            try
+            {
+                string source = CheckChanges.GetSource(address);
 
-            Action action = () => UpdateContent(source);
-            this.Invoke(action);
+                Action action = () => UpdateContent(source);
+                this.Invoke(action);
+            }
+
+            catch { }
         }
 
         private void UpdateContent(string source)
@@ -130,7 +135,7 @@ namespace WebsiteTracker
             {
                 if (!txtAddress.Text.Contains(@"://")) txtAddress.Text = "http://" + txtAddress.Text;
                 btnUpdateContent.Enabled = false;
-                txtContent.Text = "Updating content...";
+                richTextBox1.Text = "Updating content...";
 
                 thread = new Thread(() => UpdateContentAsync(txtAddress.Text));
                 thread.IsBackground = true;
@@ -167,7 +172,7 @@ namespace WebsiteTracker
         {
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.TextLength;
-            richTextBox1.SelectionColor = System.Drawing.Color.Black;
+            richTextBox1.SelectionColor = Color.Black;
 
             int selectionStart, selectionStartLen;
 
@@ -178,7 +183,7 @@ namespace WebsiteTracker
                 selectionStartLen = txtStart.TextLength;
                 richTextBox1.SelectionStart = selectionStart;
                 richTextBox1.SelectionLength = selectionStartLen;
-                richTextBox1.SelectionColor = System.Drawing.Color.Red;
+                richTextBox1.SelectionColor = Color.Red;
             }
 
             int selectionEnd, selectionEndLen;
@@ -194,7 +199,7 @@ namespace WebsiteTracker
                 selectionEndLen = txtStop.TextLength;
                 richTextBox1.SelectionStart = selectionEnd;
                 richTextBox1.SelectionLength = selectionEndLen;
-                richTextBox1.SelectionColor = System.Drawing.Color.Red;
+                richTextBox1.SelectionColor = Color.Red;
             }
 
             bool error = false;
@@ -202,7 +207,7 @@ namespace WebsiteTracker
             if (txtStart.Text != "" && selectionStart == -1)
             {
                 error = true;
-                txtStart.BackColor = errorColor;
+                if (txtContent.Text != "" && txtContent.Text != "Updating content...") txtStart.BackColor = errorColor;
             }
 
             else txtStart.BackColor = Color.White;
@@ -210,7 +215,7 @@ namespace WebsiteTracker
             if (txtStop.Text != "" && selectionEnd == -1)
             {
                 error = true;
-                txtStop.BackColor = errorColor;
+                if (txtContent.Text != "" && txtContent.Text != "Updating content...") txtStop.BackColor = errorColor;
             }
             else txtStop.BackColor = Color.White;
 
@@ -226,7 +231,7 @@ namespace WebsiteTracker
 
                 richTextBox1.SelectionStart = selection;
                 richTextBox1.SelectionLength = selectionLen;
-                richTextBox1.SelectionColor = System.Drawing.Color.Blue;
+                richTextBox1.SelectionColor = Color.Blue;
             }
 
             richTextBox1.DeselectAll();

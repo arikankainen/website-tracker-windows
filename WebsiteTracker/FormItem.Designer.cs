@@ -38,15 +38,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.txtContent = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.txtResult = new System.Windows.Forms.TextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btnUseStop = new System.Windows.Forms.Button();
             this.txtStop = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnUseStart = new System.Windows.Forms.Button();
             this.txtStart = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.txtContent = new System.Windows.Forms.TextBox();
+            this.txtResult = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.checkAutomatic = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -56,7 +57,6 @@
             this.numericHours = new System.Windows.Forms.NumericUpDown();
             this.numericDays = new System.Windows.Forms.NumericUpDown();
             this.labelChecksum = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -175,19 +175,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Content";
             // 
-            // txtContent
-            // 
-            this.txtContent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtContent.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtContent.Location = new System.Drawing.Point(572, 31);
-            this.txtContent.Multiline = true;
-            this.txtContent.Name = "txtContent";
-            this.txtContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtContent.Size = new System.Drawing.Size(44, 33);
-            this.txtContent.TabIndex = 0;
-            this.txtContent.Visible = false;
-            this.txtContent.TextChanged += new System.EventHandler(this.control_ValueChanged);
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -197,17 +184,18 @@
             this.label8.TabIndex = 1;
             this.label8.Text = "Page source:";
             // 
-            // txtResult
+            // richTextBox1
             // 
-            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtResult.Font = new System.Drawing.Font("Lucida Console", 8.25F);
-            this.txtResult.Location = new System.Drawing.Point(661, 31);
-            this.txtResult.Multiline = true;
-            this.txtResult.Name = "txtResult";
-            this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResult.Size = new System.Drawing.Size(52, 29);
-            this.txtResult.TabIndex = 0;
-            this.txtResult.Visible = false;
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Font = new System.Drawing.Font("Lucida Console", 8.25F);
+            this.richTextBox1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.richTextBox1.Location = new System.Drawing.Point(22, 120);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(720, 367);
+            this.richTextBox1.TabIndex = 4;
+            this.richTextBox1.Text = "";
             // 
             // btnUseStop
             // 
@@ -268,6 +256,31 @@
             this.label3.Size = new System.Drawing.Size(176, 13);
             this.label3.TabIndex = 1;
             this.label3.Text = "Filter content from the following text:";
+            // 
+            // txtContent
+            // 
+            this.txtContent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtContent.Font = new System.Drawing.Font("Lucida Console", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtContent.Location = new System.Drawing.Point(463, 19);
+            this.txtContent.Multiline = true;
+            this.txtContent.Name = "txtContent";
+            this.txtContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtContent.Size = new System.Drawing.Size(213, 57);
+            this.txtContent.TabIndex = 0;
+            this.txtContent.Visible = false;
+            this.txtContent.TextChanged += new System.EventHandler(this.control_ValueChanged);
+            // 
+            // txtResult
+            // 
+            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtResult.Font = new System.Drawing.Font("Lucida Console", 8.25F);
+            this.txtResult.Location = new System.Drawing.Point(704, 31);
+            this.txtResult.Multiline = true;
+            this.txtResult.Name = "txtResult";
+            this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtResult.Size = new System.Drawing.Size(52, 29);
+            this.txtResult.TabIndex = 0;
+            this.txtResult.Visible = false;
             // 
             // groupBox3
             // 
@@ -384,19 +397,6 @@
             this.labelChecksum.Size = new System.Drawing.Size(60, 13);
             this.labelChecksum.TabIndex = 1;
             this.labelChecksum.Text = "Checksum:";
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Font = new System.Drawing.Font("Lucida Console", 8.25F);
-            this.richTextBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.richTextBox1.Location = new System.Drawing.Point(22, 120);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(720, 367);
-            this.richTextBox1.TabIndex = 4;
-            this.richTextBox1.Text = "";
             // 
             // FormItem
             // 
