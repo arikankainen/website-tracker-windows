@@ -353,11 +353,6 @@
             this.numericMinutes.Size = new System.Drawing.Size(60, 20);
             this.numericMinutes.TabIndex = 3;
             this.numericMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numericMinutes.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.numericMinutes.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
             // numericHours
@@ -372,6 +367,11 @@
             this.numericHours.Size = new System.Drawing.Size(60, 20);
             this.numericHours.TabIndex = 2;
             this.numericHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numericHours.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
             this.numericHours.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
             // numericDays

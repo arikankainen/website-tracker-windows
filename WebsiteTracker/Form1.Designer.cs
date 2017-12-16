@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem_File = new System.Windows.Forms.MenuItem();
-            this.menuItem_Exit = new System.Windows.Forms.MenuItem();
-            this.menuItem18 = new System.Windows.Forms.MenuItem();
             this.menuItem_BackupList = new System.Windows.Forms.MenuItem();
             this.menuItem_RestoreList = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.menuItem_Exit = new System.Windows.Forms.MenuItem();
             this.menuItem_List = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckSelected = new System.Windows.Forms.MenuItem();
             this.menuItem_CheckAll = new System.Windows.Forms.MenuItem();
@@ -150,35 +150,35 @@
             // 
             this.menuItem_File.Index = 0;
             this.menuItem_File.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem_Exit,
-            this.menuItem18,
             this.menuItem_BackupList,
-            this.menuItem_RestoreList});
+            this.menuItem_RestoreList,
+            this.menuItem18,
+            this.menuItem_Exit});
             this.menuItem_File.Text = "File";
-            // 
-            // menuItem_Exit
-            // 
-            this.menuItem_Exit.Index = 0;
-            this.menuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
-            this.menuItem_Exit.Text = "Exit";
-            this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
-            // 
-            // menuItem18
-            // 
-            this.menuItem18.Index = 1;
-            this.menuItem18.Text = "-";
             // 
             // menuItem_BackupList
             // 
-            this.menuItem_BackupList.Index = 2;
+            this.menuItem_BackupList.Index = 0;
             this.menuItem_BackupList.Text = "Backup...";
             this.menuItem_BackupList.Click += new System.EventHandler(this.menuItem_BackupList_Click);
             // 
             // menuItem_RestoreList
             // 
-            this.menuItem_RestoreList.Index = 3;
+            this.menuItem_RestoreList.Index = 1;
             this.menuItem_RestoreList.Text = "Restore...";
             this.menuItem_RestoreList.Click += new System.EventHandler(this.menuItem_RestoreList_Click);
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 2;
+            this.menuItem18.Text = "-";
+            // 
+            // menuItem_Exit
+            // 
+            this.menuItem_Exit.Index = 3;
+            this.menuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
+            this.menuItem_Exit.Text = "Exit";
+            this.menuItem_Exit.Click += new System.EventHandler(this.menuItem_Exit_Click);
             // 
             // menuItem_List
             // 
@@ -466,7 +466,7 @@
             // 
             // statusBar1
             // 
-            this.statusBar1.Location = new System.Drawing.Point(0, 249);
+            this.statusBar1.Location = new System.Drawing.Point(0, 228);
             this.statusBar1.Name = "statusBar1";
             this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusUpdatedItems,
@@ -843,7 +843,7 @@
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
             this.lstItems.ShowItemToolTips = true;
-            this.lstItems.Size = new System.Drawing.Size(1238, 204);
+            this.lstItems.Size = new System.Drawing.Size(1238, 183);
             this.lstItems.SmallImageList = this.imageListGlobe;
             this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstItems.TabIndex = 0;
@@ -907,7 +907,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 271);
+            this.ClientSize = new System.Drawing.Size(1262, 250);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusBar1);
             this.Controls.Add(this.lstItems);
