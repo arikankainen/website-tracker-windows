@@ -129,6 +129,7 @@
             this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmNotes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
@@ -830,6 +831,7 @@
             this.clmName,
             this.clmEnabled,
             this.clmAddress,
+            this.clmNotes,
             this.clmInterval,
             this.clmContentStart,
             this.clmContentStop,
@@ -902,6 +904,10 @@
             // 
             this.clmStatus.Text = "Status";
             this.clmStatus.Width = 153;
+            // 
+            // clmNotes
+            // 
+            this.clmNotes.Text = "Notes";
             // 
             // Form1
             // 
@@ -1038,6 +1044,7 @@
         private System.Windows.Forms.ToolStripButton btnClearUpdated;
         private System.Windows.Forms.ToolStripButton btnOpenSelected;
         private System.Windows.Forms.ToolStripButton btnOpenAllUpdatedPages;
+        private System.Windows.Forms.ColumnHeader clmNotes;
     }
 }
 

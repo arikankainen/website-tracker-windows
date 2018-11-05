@@ -21,6 +21,12 @@ namespace WebsiteTracker
             set { txtName.Text = value; }
         }
 
+        public string ItemNotes
+        {
+            get { return txtNotes.Text; }
+            set { txtNotes.Text = value; }
+        }
+
         public string ItemEnabled
         {
             get

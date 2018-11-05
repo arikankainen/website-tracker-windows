@@ -19,6 +19,7 @@ namespace WebsiteTracker
         private string listFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "list.wtlst");
         private char listFileSeparator = '|';
         private string separatorString = "!#PIPE#CHARACTER#!";
+        private string lineFeed = "!#LINE#FEED#!";
         private string dateString = @"dd.MM.yyyy HH:mm:ss";
 
         private string appRegistryName = "ak_websitetracker";
@@ -27,14 +28,15 @@ namespace WebsiteTracker
         private const int ITEM_NAME = 0;
         private const int ITEM_ENABLED = 1;
         private const int ITEM_ADDRESS = 2;
-        private const int ITEM_INTERVAL = 3;
-        private const int ITEM_START = 4;
-        private const int ITEM_STOP = 5;
-        private const int ITEM_CHECKSUM = 6;
-        private const int ITEM_LASTCHECKED = 7;
-        private const int ITEM_LASTUPDATED = 8;
-        private const int ITEM_STATUS = 9;
-        private const int ITEM_CHANGED = 10;
+        private const int ITEM_NOTES = 3;
+        private const int ITEM_INTERVAL = 4;
+        private const int ITEM_START = 5;
+        private const int ITEM_STOP = 6;
+        private const int ITEM_CHECKSUM = 7;
+        private const int ITEM_LASTCHECKED = 8;
+        private const int ITEM_LASTUPDATED = 9;
+        private const int ITEM_STATUS = 10;
+        private const int ITEM_CHANGED = 11;
 
         private const string TEXT_CHECKING = "Checking...";
 
@@ -196,6 +198,7 @@ namespace WebsiteTracker
                 clmName.Width = settings.LoadSetting("WidthColumnName", "int", "165");
                 clmEnabled.Width = settings.LoadSetting("WidthColumnEnabled", "int", "55");
                 clmAddress.Width = settings.LoadSetting("WidthColumnAddress", "int", "200");
+                clmNotes.Width = settings.LoadSetting("WidthColumnNotes", "int", "100");
                 clmInterval.Width = settings.LoadSetting("WidthColumnInterval", "int", "80");
                 clmContentStart.Width = settings.LoadSetting("WidthColumnContentStart", "int", "125");
                 clmContentStop.Width = settings.LoadSetting("WidthColumnContentStop", "int", "125");
@@ -208,6 +211,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnName", clmName.Width.ToString());
             settings.SaveSetting("WidthColumnEnabled", clmEnabled.Width.ToString());
             settings.SaveSetting("WidthColumnAddress", clmAddress.Width.ToString());
+            settings.SaveSetting("WidthColumnNotes", clmNotes.Width.ToString());
             settings.SaveSetting("WidthColumnInterval", clmInterval.Width.ToString());
             settings.SaveSetting("WidthColumnContentStart", clmContentStart.Width.ToString());
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
@@ -272,6 +276,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnName", clmName.Width.ToString());
             settings.SaveSetting("WidthColumnEnabled", clmEnabled.Width.ToString());
             settings.SaveSetting("WidthColumnAddress", clmAddress.Width.ToString());
+            settings.SaveSetting("WidthColumnNotes", clmNotes.Width.ToString());
             settings.SaveSetting("WidthColumnInterval", clmInterval.Width.ToString());
             settings.SaveSetting("WidthColumnContentStart", clmContentStart.Width.ToString());
             settings.SaveSetting("WidthColumnContentStop", clmContentStop.Width.ToString());
@@ -314,15 +319,16 @@ namespace WebsiteTracker
                             List<string> list = line.Split(listFileSeparator).ToList<string>();
 
                             ListViewItem item = new ListViewItem(list[ITEM_NAME].Replace(separatorString, listFileSeparator.ToString()));
-                            item.SubItems.Add(list[ITEM_ENABLED]);
-                            item.SubItems.Add(list[ITEM_ADDRESS]);
-                            item.SubItems.Add(list[ITEM_INTERVAL]);
+                            item.SubItems.Add(list[ITEM_ENABLED].Replace(separatorString, listFileSeparator.ToString()));
+                            item.SubItems.Add(list[ITEM_ADDRESS].Replace(separatorString, listFileSeparator.ToString()));
+                            item.SubItems.Add(list[ITEM_NOTES].Replace(separatorString, listFileSeparator.ToString()).Replace(lineFeed, Environment.NewLine));
+                            item.SubItems.Add(list[ITEM_INTERVAL].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_START].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_STOP].Replace(separatorString, listFileSeparator.ToString()));
-                            item.SubItems.Add(list[ITEM_CHECKSUM]);
-                            item.SubItems.Add(list[ITEM_LASTCHECKED]);
-                            item.SubItems.Add(list[ITEM_LASTUPDATED]);
-                            item.SubItems.Add(list[ITEM_STATUS]);
+                            item.SubItems.Add(list[ITEM_CHECKSUM].Replace(separatorString, listFileSeparator.ToString()));
+                            item.SubItems.Add(list[ITEM_LASTCHECKED].Replace(separatorString, listFileSeparator.ToString()));
+                            item.SubItems.Add(list[ITEM_LASTUPDATED].Replace(separatorString, listFileSeparator.ToString()));
+                            item.SubItems.Add(list[ITEM_STATUS].Replace(separatorString, listFileSeparator.ToString()));
                             item.Tag = "";
 
                             if (list[ITEM_CHANGED] == Status.Updated.ToString())
@@ -368,18 +374,19 @@ namespace WebsiteTracker
                         if (item.SubItems[ITEM_LASTCHECKED].Text == TEXT_CHECKING) item.SubItems[ITEM_LASTCHECKED].Text = "-";
 
                         string name = item.SubItems[ITEM_NAME].Text.Replace(listFileSeparator.ToString(), separatorString);
-                        string enabled = item.SubItems[ITEM_ENABLED].Text;
-                        string address = item.SubItems[ITEM_ADDRESS].Text;
-                        string interval = item.SubItems[ITEM_INTERVAL].Text;
+                        string enabled = item.SubItems[ITEM_ENABLED].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string address = item.SubItems[ITEM_ADDRESS].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string notes = item.SubItems[ITEM_NOTES].Text.Replace(listFileSeparator.ToString(), separatorString).Replace(Environment.NewLine, lineFeed);
+                        string interval = item.SubItems[ITEM_INTERVAL].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string start = item.SubItems[ITEM_START].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string stop = item.SubItems[ITEM_STOP].Text.Replace(listFileSeparator.ToString(), separatorString);
-                        string checksum = item.SubItems[ITEM_CHECKSUM].Text;
-                        string lastChecked = item.SubItems[ITEM_LASTCHECKED].Text;
-                        string lastUpdated = item.SubItems[ITEM_LASTUPDATED].Text;
-                        string status = item.SubItems[ITEM_STATUS].Text;
+                        string checksum = item.SubItems[ITEM_CHECKSUM].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string lastChecked = item.SubItems[ITEM_LASTCHECKED].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string lastUpdated = item.SubItems[ITEM_LASTUPDATED].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string status = item.SubItems[ITEM_STATUS].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string changed = item.Tag.ToString();
 
-                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed);
+                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + notes + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed);
                     }
                 }
             }
@@ -702,7 +709,8 @@ namespace WebsiteTracker
         {
             if (item.SubItems[ITEM_LASTCHECKED].Text != TEXT_CHECKING)
             {
-                if (forceCheck || item.SubItems[ITEM_ENABLED].Text != "")
+                //if (forceCheck || item.SubItems[ITEM_ENABLED].Text != "")
+                if (item.SubItems[ITEM_ENABLED].Text != "")
                 {
                     DateTime now = DateTime.Now;
                     DateTime lastCheck = DateTime.MinValue;
@@ -1097,6 +1105,7 @@ namespace WebsiteTracker
                 ListViewItem item = new ListViewItem(form.ItemName);
                 item.SubItems.Add(form.ItemEnabled);
                 item.SubItems.Add(form.ItemAddress);
+                item.SubItems.Add(form.ItemNotes);
                 item.SubItems.Add(form.ItemInterval);
                 item.SubItems.Add(form.ItemStart);
                 item.SubItems.Add(form.ItemStop);
@@ -1123,6 +1132,7 @@ namespace WebsiteTracker
                 form.ItemName = lstItems.SelectedItems[0].SubItems[ITEM_NAME].Text;
                 form.ItemEnabled = enabled;
                 form.ItemAddress = lstItems.SelectedItems[0].SubItems[ITEM_ADDRESS].Text;
+                form.ItemNotes = lstItems.SelectedItems[0].SubItems[ITEM_NOTES].Text;
                 form.ItemInterval = lstItems.SelectedItems[0].SubItems[ITEM_INTERVAL].Text;
                 form.ItemStart = lstItems.SelectedItems[0].SubItems[ITEM_START].Text;
                 form.ItemStop = lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text;
@@ -1134,6 +1144,7 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_NAME].Text = form.ItemName;
                     lstItems.SelectedItems[0].SubItems[ITEM_ENABLED].Text = form.ItemEnabled;
                     lstItems.SelectedItems[0].SubItems[ITEM_ADDRESS].Text = form.ItemAddress;
+                    lstItems.SelectedItems[0].SubItems[ITEM_NOTES].Text = form.ItemNotes;
                     lstItems.SelectedItems[0].SubItems[ITEM_INTERVAL].Text = form.ItemInterval;
                     lstItems.SelectedItems[0].SubItems[ITEM_START].Text = form.ItemStart;
                     lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text = form.ItemStop;
