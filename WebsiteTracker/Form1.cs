@@ -37,6 +37,7 @@ namespace WebsiteTracker
         private const int ITEM_LASTUPDATED = 9;
         private const int ITEM_STATUS = 10;
         private const int ITEM_CHANGED = 11;
+        private const int ITEM_ALLOW_EMPTY_CHECKSUM = 11;
 
         private const string TEXT_CHECKING = "Checking...";
 
@@ -206,6 +207,7 @@ namespace WebsiteTracker
                 clmLastChecked.Width = settings.LoadSetting("WidthColumnLastChecked", "int", "140");
                 clmLastUpdated.Width = settings.LoadSetting("WidthColumnLastUpdated", "int", "140");
                 clmStatus.Width = settings.LoadSetting("WidthColumnStatus", "int", "66");
+                clmAllowEmptyChecksum.Width = settings.LoadSetting("WidthColumnAllowEmptyChecksum", "int", "55");
             }
 
             settings.SaveSetting("WidthColumnName", clmName.Width.ToString());
@@ -219,6 +221,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
             settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
+            settings.SaveSetting("WidthColumnAllowEmptyChecksum", clmAllowEmptyChecksum.Width.ToString());
 
         }
 
@@ -284,6 +287,7 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnLastChecked", clmLastChecked.Width.ToString());
             settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
+            settings.SaveSetting("WidthColumnAllowEmptyChecksum", clmAllowEmptyChecksum.Width.ToString());
 
             if (this.WindowState == FormWindowState.Maximized) settings.SaveSetting("Maximized", "True");
             else settings.SaveSetting("Maximized", "False");
@@ -329,6 +333,10 @@ namespace WebsiteTracker
                             item.SubItems.Add(list[ITEM_LASTCHECKED].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_LASTUPDATED].Replace(separatorString, listFileSeparator.ToString()));
                             item.SubItems.Add(list[ITEM_STATUS].Replace(separatorString, listFileSeparator.ToString()));
+
+                            if (list.Count > 12) item.SubItems.Add(list[ITEM_ALLOW_EMPTY_CHECKSUM + 1].Replace(separatorString, listFileSeparator.ToString()));
+                            else item.SubItems.Add("True");
+
                             item.Tag = "";
 
                             if (list[ITEM_CHANGED] == Status.Updated.ToString())
@@ -360,7 +368,7 @@ namespace WebsiteTracker
                 }
             }
 
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex) { MessageBox.Show(ex.Message + ex.StackTrace); }
         }
 
         private void SaveList(string filename)
@@ -385,13 +393,14 @@ namespace WebsiteTracker
                         string lastUpdated = item.SubItems[ITEM_LASTUPDATED].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string status = item.SubItems[ITEM_STATUS].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string changed = item.Tag.ToString();
+                        string allowEmptyChecksum = item.SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text.Replace(listFileSeparator.ToString(), separatorString);
 
-                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + notes + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed);
+                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + notes + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed + listFileSeparator + allowEmptyChecksum);
                     }
                 }
             }
 
-            catch (Exception ex) { MessageBox.Show(ex.Message); }
+            catch (Exception ex) { MessageBox.Show(ex.Message + ex.StackTrace); }
         }
 
         private void CreateFonts()
@@ -755,7 +764,7 @@ namespace WebsiteTracker
                 string source = CheckChanges.GetSource(item.SubItems[ITEM_ADDRESS].Text);
                 string start = item.SubItems[ITEM_START].Text;
                 string stop = item.SubItems[ITEM_STOP].Text;
-                string checksum = CheckChanges.GetChecksum(source, start, stop);
+                string checksum = CheckChanges.GetChecksum(source, start, stop, item.SubItems[ITEM_CHECKSUM].Text, bool.Parse(item.SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text));
 
                 if (source == "" || source.Substring(0, 7) == "[ERROR]")
                 {
@@ -1113,6 +1122,7 @@ namespace WebsiteTracker
                 item.SubItems.Add("-");
                 item.SubItems.Add("-");
                 item.SubItems.Add("");
+                item.SubItems.Add(form.ItemAllowEmptyChecksum.ToString());
                 item.Tag = Status.NotUpdated;
 
                 lstItems.Items.Add(item);
@@ -1136,6 +1146,7 @@ namespace WebsiteTracker
                 form.ItemInterval = lstItems.SelectedItems[0].SubItems[ITEM_INTERVAL].Text;
                 form.ItemStart = lstItems.SelectedItems[0].SubItems[ITEM_START].Text;
                 form.ItemStop = lstItems.SelectedItems[0].SubItems[ITEM_STOP].Text;
+                form.ItemAllowEmptyChecksum = bool.Parse(lstItems.SelectedItems[0].SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text);
 
                 form.ShowDialog();
 
@@ -1152,6 +1163,7 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_LASTCHECKED].Text = "-";
                     lstItems.SelectedItems[0].SubItems[ITEM_LASTUPDATED].Text = "-";
                     lstItems.SelectedItems[0].SubItems[ITEM_STATUS].Text = "";
+                    lstItems.SelectedItems[0].SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text = form.ItemAllowEmptyChecksum.ToString();
                     lstItems.SelectedItems[0].Tag = Status.NotUpdated;
                 }
 

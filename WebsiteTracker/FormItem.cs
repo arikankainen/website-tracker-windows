@@ -66,9 +66,15 @@ namespace WebsiteTracker
             set { txtStop.Text = value; }
         }
 
+        public bool ItemAllowEmptyChecksum
+        {
+            get { return checkAllowEmptyChecksum.Checked; }
+            set { checkAllowEmptyChecksum.Checked = value; }
+        }
+
         public string ItemChecksum
         {
-            get { return CheckChanges.GetChecksum(txtContent.Text, txtStart.Text, txtStop.Text); }
+            get { return CheckChanges.GetChecksum(txtContent.Text, txtStart.Text, txtStop.Text, labelChecksum.Text.Replace("Checksum: ", ""), checkAllowEmptyChecksum.Checked); }
         }
 
         private Thread thread;
@@ -99,7 +105,7 @@ namespace WebsiteTracker
 
             if (txtName.Text == "") txtName.Text = ParseTitle();
 
-            UpdateRTB();
+            UpdateRTB(false);
         }
 
         private string ParseTitle()
@@ -162,19 +168,20 @@ namespace WebsiteTracker
 
         private void control_ValueChanged(object sender, EventArgs e)
         {
-            labelChecksum.Text = "Checksum: " + CheckChanges.GetChecksum(txtContent.Text, txtStart.Text, txtStop.Text);
+            labelChecksum.Text = "Checksum: " + CheckChanges.GetChecksum(txtContent.Text, txtStart.Text, txtStop.Text, labelChecksum.Text.Replace("Checksum: ", ""), checkAllowEmptyChecksum.Checked);
             txtResult.Text = CheckChanges.GetResult(txtContent.Text, txtStart.Text, txtStop.Text);
 
             if (txtAddress.Text != "") btnUpdateContent.Enabled = true;
             else btnUpdateContent.Enabled = false;
 
+            //if (txtName.Text != "" && txtAddress.Text != "" && txtContent.Text != "" && txtStart.Text != "" && txtStop.Text != "" && (numericDays.Value > 0 || numericHours.Value > 0 || numericMinutes.Value > 0)) btnOk.Enabled = true;
             if (txtName.Text != "" && txtAddress.Text != "" && txtContent.Text != "" && txtResult.Text != "" && (numericDays.Value > 0 || numericHours.Value > 0 || numericMinutes.Value > 0)) btnOk.Enabled = true;
             else btnOk.Enabled = false;
 
-            UpdateRTB();
+            UpdateRTB(false);
         }
 
-        private void UpdateRTB()
+        private void UpdateRTB(bool scrollToHit)
         {
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.TextLength;
@@ -190,6 +197,7 @@ namespace WebsiteTracker
                 richTextBox1.SelectionStart = selectionStart;
                 richTextBox1.SelectionLength = selectionStartLen;
                 richTextBox1.SelectionColor = Color.Red;
+                if (scrollToHit) richTextBox1.ScrollToCaret();
             }
 
             int selectionEnd, selectionEndLen;
@@ -262,6 +270,11 @@ namespace WebsiteTracker
         private void txtAddress_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter) btnUpdateContent.PerformClick();
+        }
+
+        private void BtnScrollToHit_Click(object sender, EventArgs e)
+        {
+            UpdateRTB(true);
         }
     }
 }

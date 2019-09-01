@@ -10,11 +10,12 @@ namespace WebsiteTracker
 {
     static class CheckChanges
     {
-        public static string GetChecksum(string content, string start, string stop)
+        public static string GetChecksum(string content, string start, string stop, string oldChecksum, bool allowEmptyChecksum)
         {
             string result = GetResult(content, start, stop);
             if (result != "") return CreateMD5(result);
-            else return "";
+            else if (allowEmptyChecksum) return "";
+            else return oldChecksum;
         }
 
         public static string GetResult(string content, string start, string stop)

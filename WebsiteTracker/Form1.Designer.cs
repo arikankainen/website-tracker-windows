@@ -122,6 +122,7 @@
             this.clmName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAddress = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmNotes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmInterval = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmContentStart = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmContentStop = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -129,7 +130,7 @@
             this.clmLastChecked = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.clmNotes = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmAllowEmptyChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
@@ -467,7 +468,7 @@
             // 
             // statusBar1
             // 
-            this.statusBar1.Location = new System.Drawing.Point(0, 228);
+            this.statusBar1.Location = new System.Drawing.Point(0, 139);
             this.statusBar1.Name = "statusBar1";
             this.statusBar1.Panels.AddRange(new System.Windows.Forms.StatusBarPanel[] {
             this.statusUpdatedItems,
@@ -838,14 +839,15 @@
             this.clmChecksum,
             this.clmLastChecked,
             this.clmLastUpdated,
-            this.clmStatus});
+            this.clmStatus,
+            this.clmAllowEmptyChecksum});
             this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
             this.lstItems.Location = new System.Drawing.Point(12, 33);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
             this.lstItems.ShowItemToolTips = true;
-            this.lstItems.Size = new System.Drawing.Size(1238, 183);
+            this.lstItems.Size = new System.Drawing.Size(1238, 94);
             this.lstItems.SmallImageList = this.imageListGlobe;
             this.lstItems.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lstItems.TabIndex = 0;
@@ -870,6 +872,10 @@
             // 
             this.clmAddress.Text = "Address";
             this.clmAddress.Width = 221;
+            // 
+            // clmNotes
+            // 
+            this.clmNotes.Text = "Notes";
             // 
             // clmInterval
             // 
@@ -905,15 +911,16 @@
             this.clmStatus.Text = "Status";
             this.clmStatus.Width = 153;
             // 
-            // clmNotes
+            // clmAllowEmptyChecksum
             // 
-            this.clmNotes.Text = "Notes";
+            this.clmAllowEmptyChecksum.Text = "Allow empty result";
+            this.clmAllowEmptyChecksum.Width = 55;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 250);
+            this.ClientSize = new System.Drawing.Size(1262, 161);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusBar1);
             this.Controls.Add(this.lstItems);
@@ -1045,6 +1052,7 @@
         private System.Windows.Forms.ToolStripButton btnOpenSelected;
         private System.Windows.Forms.ToolStripButton btnOpenAllUpdatedPages;
         private System.Windows.Forms.ColumnHeader clmNotes;
+        private System.Windows.Forms.ColumnHeader clmAllowEmptyChecksum;
     }
 }
 
