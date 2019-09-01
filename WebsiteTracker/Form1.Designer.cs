@@ -118,6 +118,7 @@
             this.btnClearUpdated = new System.Windows.Forms.ToolStripButton();
             this.btnOpenSelected = new System.Windows.Forms.ToolStripButton();
             this.btnOpenAllUpdatedPages = new System.Windows.Forms.ToolStripButton();
+            this.menuItem_RememberColumnOrder = new System.Windows.Forms.MenuItem();
             this.lstItems = new WebsiteTracker.VisualStylesListView();
             this.clmName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -131,6 +132,7 @@
             this.clmLastUpdated = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmStatus = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAllowEmptyChecksum = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmResult = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             ((System.ComponentModel.ISupportInitialize)(this.statusUpdatedItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusErrorItems)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.statusEnabledItems)).BeginInit();
@@ -297,6 +299,7 @@
             this.menuItem_RememberWindowSize,
             this.menuItem_RememberWindowPosition,
             this.menuItem_RememberColumnSizes,
+            this.menuItem_RememberColumnOrder,
             this.menuItem12,
             this.menuItem_ShowNotifications,
             this.menuItem8,
@@ -333,74 +336,74 @@
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 3;
+            this.menuItem12.Index = 4;
             this.menuItem12.Text = "-";
             // 
             // menuItem_ShowNotifications
             // 
-            this.menuItem_ShowNotifications.Index = 4;
+            this.menuItem_ShowNotifications.Index = 5;
             this.menuItem_ShowNotifications.Text = "Show notifications";
             this.menuItem_ShowNotifications.Click += new System.EventHandler(this.menuItem_ShowNotifications_Click);
             // 
             // menuItem8
             // 
-            this.menuItem8.Index = 5;
+            this.menuItem8.Index = 6;
             this.menuItem8.Text = "-";
             // 
             // menuItem_StartAutomatically
             // 
-            this.menuItem_StartAutomatically.Index = 6;
+            this.menuItem_StartAutomatically.Index = 7;
             this.menuItem_StartAutomatically.Text = "Start automatically with Windows";
             this.menuItem_StartAutomatically.Click += new System.EventHandler(this.menuItem_StartAutomatically_Click);
             // 
             // menuItem_StartMinimized
             // 
-            this.menuItem_StartMinimized.Index = 7;
+            this.menuItem_StartMinimized.Index = 8;
             this.menuItem_StartMinimized.Text = "Start minimized";
             this.menuItem_StartMinimized.Click += new System.EventHandler(this.menuItem_StartMinimized_Click);
             // 
             // menuItem_MinimizeToTray
             // 
-            this.menuItem_MinimizeToTray.Index = 8;
+            this.menuItem_MinimizeToTray.Index = 9;
             this.menuItem_MinimizeToTray.Text = "Minimize to tray";
             this.menuItem_MinimizeToTray.Click += new System.EventHandler(this.menuItem_MinimizeToTray_Click);
             // 
             // menuItem_CloseToTray
             // 
-            this.menuItem_CloseToTray.Index = 9;
+            this.menuItem_CloseToTray.Index = 10;
             this.menuItem_CloseToTray.Text = "Close to tray";
             this.menuItem_CloseToTray.Click += new System.EventHandler(this.menuItem_CloseToTray_Click);
             // 
             // menuItem11
             // 
-            this.menuItem11.Index = 10;
+            this.menuItem11.Index = 11;
             this.menuItem11.Text = "-";
             // 
             // menuItem_SaveLog
             // 
-            this.menuItem_SaveLog.Index = 11;
+            this.menuItem_SaveLog.Index = 12;
             this.menuItem_SaveLog.Text = "Save log file";
             this.menuItem_SaveLog.Click += new System.EventHandler(this.menuItem_SaveLog_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 12;
+            this.menuItem15.Index = 13;
             this.menuItem15.Text = "-";
             // 
             // menuItem_SelectWebBrowser
             // 
-            this.menuItem_SelectWebBrowser.Index = 13;
+            this.menuItem_SelectWebBrowser.Index = 14;
             this.menuItem_SelectWebBrowser.Text = "Select web browser...";
             this.menuItem_SelectWebBrowser.Click += new System.EventHandler(this.menuItem_SelectWebBrowser_Click);
             // 
             // menuItem3
             // 
-            this.menuItem3.Index = 14;
+            this.menuItem3.Index = 15;
             this.menuItem3.Text = "-";
             // 
             // menuItem4
             // 
-            this.menuItem4.Index = 15;
+            this.menuItem4.Index = 16;
             this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Font_Normal,
             this.menuItem_Font_Updated,
@@ -427,7 +430,7 @@
             // 
             // menuItem21
             // 
-            this.menuItem21.Index = 16;
+            this.menuItem21.Index = 17;
             this.menuItem21.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Color_Normal,
             this.menuItem_Color_Updated,
@@ -823,8 +826,15 @@
             this.btnOpenAllUpdatedPages.Text = "Open all updated pages";
             this.btnOpenAllUpdatedPages.Click += new System.EventHandler(this.btnOpenAllUpdatedPages_Click);
             // 
+            // menuItem_RememberColumnOrder
+            // 
+            this.menuItem_RememberColumnOrder.Index = 3;
+            this.menuItem_RememberColumnOrder.Text = "Remember column order";
+            this.menuItem_RememberColumnOrder.Click += new System.EventHandler(this.MenuItem_RememberColumnOrder_Click);
+            // 
             // lstItems
             // 
+            this.lstItems.AllowColumnReorder = true;
             this.lstItems.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -840,7 +850,8 @@
             this.clmLastChecked,
             this.clmLastUpdated,
             this.clmStatus,
-            this.clmAllowEmptyChecksum});
+            this.clmAllowEmptyChecksum,
+            this.clmResult});
             this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
             this.lstItems.Location = new System.Drawing.Point(12, 33);
@@ -894,27 +905,37 @@
             // 
             // clmChecksum
             // 
+            this.clmChecksum.DisplayIndex = 8;
             this.clmChecksum.Text = "Checksum";
             this.clmChecksum.Width = 111;
             // 
             // clmLastChecked
             // 
+            this.clmLastChecked.DisplayIndex = 9;
             this.clmLastChecked.Text = "Last checked";
             this.clmLastChecked.Width = 126;
             // 
             // clmLastUpdated
             // 
+            this.clmLastUpdated.DisplayIndex = 10;
             this.clmLastUpdated.Text = "Last updated";
             // 
             // clmStatus
             // 
+            this.clmStatus.DisplayIndex = 11;
             this.clmStatus.Text = "Status";
             this.clmStatus.Width = 153;
             // 
             // clmAllowEmptyChecksum
             // 
+            this.clmAllowEmptyChecksum.DisplayIndex = 12;
             this.clmAllowEmptyChecksum.Text = "Allow empty result";
             this.clmAllowEmptyChecksum.Width = 55;
+            // 
+            // clmResult
+            // 
+            this.clmResult.DisplayIndex = 7;
+            this.clmResult.Text = "Result";
             // 
             // Form1
             // 
@@ -1053,6 +1074,8 @@
         private System.Windows.Forms.ToolStripButton btnOpenAllUpdatedPages;
         private System.Windows.Forms.ColumnHeader clmNotes;
         private System.Windows.Forms.ColumnHeader clmAllowEmptyChecksum;
+        private System.Windows.Forms.ColumnHeader clmResult;
+        private System.Windows.Forms.MenuItem menuItem_RememberColumnOrder;
     }
 }
 

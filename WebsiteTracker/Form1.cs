@@ -15,14 +15,14 @@ namespace WebsiteTracker
     {
         private Settings settings = new Settings();
 
-        private string logFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "check.log");
-        private string listFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "list.wtlst");
-        private char listFileSeparator = '|';
-        private string separatorString = "!#PIPE#CHARACTER#!";
-        private string lineFeed = "!#LINE#FEED#!";
-        private string dateString = @"dd.MM.yyyy HH:mm:ss";
+        private readonly string logFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "check.log");
+        private readonly string listFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "list.wtlst");
+        private readonly char listFileSeparator = '|';
+        private readonly string separatorString = "!#PIPE#CHARACTER#!";
+        private readonly string lineFeed = "!#LINE#FEED#!";
+        private readonly string dateString = @"dd.MM.yyyy HH:mm:ss";
 
-        private string appRegistryName = "ak_websitetracker";
+        private readonly string appRegistryName = "ak_websitetracker";
         private string lastUpdated = "-";
 
         private const int ITEM_NAME = 0;
@@ -38,11 +38,11 @@ namespace WebsiteTracker
         private const int ITEM_STATUS = 10;
         private const int ITEM_CHANGED = 11;
         private const int ITEM_ALLOW_EMPTY_CHECKSUM = 11;
+        private const int ITEM_RESULT = 12;
 
         private const string TEXT_CHECKING = "Checking...";
 
         private List<string> checkQueue = new List<string>();
-        private bool checkQueueActive = false;
         private bool checkQueueForced = false;
 
         private int width;
@@ -55,7 +55,7 @@ namespace WebsiteTracker
         private bool formClosing = false;
         private bool formCloseNow = false;
 
-        private const int DEFAULT_WIDTH = 1396;
+        private const int DEFAULT_WIDTH = 1436;
         private const int DEFAULT_HEIGHT = 400;
         private const int MIN_WIDTH = 500;
         private const int MIN_HEIGHT = 200;
@@ -121,6 +121,7 @@ namespace WebsiteTracker
             menuItem_RememberWindowSize.Checked = settings.LoadSetting("RememberSize", "bool", "true");
             menuItem_RememberWindowPosition.Checked = settings.LoadSetting("RememberPosition", "bool", "true");
             menuItem_RememberColumnSizes.Checked = settings.LoadSetting("RememberColumnWidth", "bool", "true");
+            menuItem_RememberColumnOrder.Checked = settings.LoadSetting("RememberColumnOrder", "bool", "true");
             menuItem_ShowNotifications.Checked = settings.LoadSetting("ShowNotifications", "bool", "true");
             menuItem_StartAutomatically.Checked = settings.LoadSetting("StartAutomatically", "bool", "false");
             menuItem_StartMinimized.Checked = settings.LoadSetting("StartMinimized", "bool", "false");
@@ -208,8 +209,27 @@ namespace WebsiteTracker
                 clmLastUpdated.Width = settings.LoadSetting("WidthColumnLastUpdated", "int", "140");
                 clmStatus.Width = settings.LoadSetting("WidthColumnStatus", "int", "66");
                 clmAllowEmptyChecksum.Width = settings.LoadSetting("WidthColumnAllowEmptyChecksum", "int", "55");
+                clmResult.Width = settings.LoadSetting("WidthColumnResult", "int", "60");
             }
 
+            if (menuItem_RememberColumnOrder.Checked)
+            {
+                clmName.DisplayIndex = settings.LoadSetting("DisplayIndexColumnName", "int", "0");
+                clmEnabled.DisplayIndex = settings.LoadSetting("DisplayIndexColumnEnabled", "int", "1");
+                clmAddress.DisplayIndex = settings.LoadSetting("DisplayIndexColumnAddress", "int", "2");
+                clmNotes.DisplayIndex = settings.LoadSetting("DisplayIndexColumnNotes", "int", "3");
+                clmInterval.DisplayIndex = settings.LoadSetting("DisplayIndexColumnInterval", "int", "4");
+                clmContentStart.DisplayIndex = settings.LoadSetting("DisplayIndexColumnContentStart", "int", "5");
+                clmContentStop.DisplayIndex = settings.LoadSetting("DisplayIndexColumnContentStop", "int", "6");
+                clmChecksum.DisplayIndex = settings.LoadSetting("DisplayIndexColumnChecksum", "int", "8");
+                clmLastChecked.DisplayIndex = settings.LoadSetting("DisplayIndexColumnLastChecked", "int", "9");
+                clmLastUpdated.DisplayIndex = settings.LoadSetting("DisplayIndexColumnLastUpdated", "int", "10");
+                clmStatus.DisplayIndex = settings.LoadSetting("DisplayIndexColumnStatus", "int", "11");
+                clmAllowEmptyChecksum.DisplayIndex = settings.LoadSetting("DisplayIndexColumnAllowEmptyChecksum", "int", "12");
+                clmResult.DisplayIndex = settings.LoadSetting("DisplayIndexColumnResult", "int", "7");
+            }
+
+            /*
             settings.SaveSetting("WidthColumnName", clmName.Width.ToString());
             settings.SaveSetting("WidthColumnEnabled", clmEnabled.Width.ToString());
             settings.SaveSetting("WidthColumnAddress", clmAddress.Width.ToString());
@@ -222,7 +242,8 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
             settings.SaveSetting("WidthColumnAllowEmptyChecksum", clmAllowEmptyChecksum.Width.ToString());
-
+            settings.SaveSetting("WidthColumnResult", clmResult.Width.ToString());
+            */
         }
 
         private void CenterScreen()
@@ -246,6 +267,7 @@ namespace WebsiteTracker
             settings.SaveSetting("RememberSize", menuItem_RememberWindowSize.Checked.ToString());
             settings.SaveSetting("RememberPosition", menuItem_RememberWindowPosition.Checked.ToString());
             settings.SaveSetting("RememberColumnWidth", menuItem_RememberColumnSizes.Checked.ToString());
+            settings.SaveSetting("RememberColumnOrder", menuItem_RememberColumnOrder.Checked.ToString());
             settings.SaveSetting("ShowNotifications", menuItem_ShowNotifications.Checked.ToString());
             settings.SaveSetting("StartAutomatically", menuItem_StartAutomatically.Checked.ToString());
             settings.SaveSetting("StartMinimized", menuItem_StartMinimized.Checked.ToString());
@@ -288,6 +310,21 @@ namespace WebsiteTracker
             settings.SaveSetting("WidthColumnLastUpdated", clmLastUpdated.Width.ToString());
             settings.SaveSetting("WidthColumnStatus", clmStatus.Width.ToString());
             settings.SaveSetting("WidthColumnAllowEmptyChecksum", clmAllowEmptyChecksum.Width.ToString());
+            settings.SaveSetting("WidthColumnResult", clmResult.Width.ToString());
+
+            settings.SaveSetting("DisplayIndexColumnName", clmName.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnEnabled", clmEnabled.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnAddress", clmAddress.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnNotes", clmNotes.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnInterval", clmInterval.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnContentStart", clmContentStart.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnContentStop", clmContentStop.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnChecksum", clmChecksum.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnLastChecked", clmLastChecked.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnLastUpdated", clmLastUpdated.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnStatus", clmStatus.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnAllowEmptyChecksum", clmAllowEmptyChecksum.DisplayIndex.ToString());
+            settings.SaveSetting("DisplayIndexColumnResult", clmResult.DisplayIndex.ToString());
 
             if (this.WindowState == FormWindowState.Maximized) settings.SaveSetting("Maximized", "True");
             else settings.SaveSetting("Maximized", "False");
@@ -336,6 +373,9 @@ namespace WebsiteTracker
 
                             if (list.Count > 12) item.SubItems.Add(list[ITEM_ALLOW_EMPTY_CHECKSUM + 1].Replace(separatorString, listFileSeparator.ToString()));
                             else item.SubItems.Add("True");
+
+                            if (list.Count > 13) item.SubItems.Add(list[ITEM_RESULT + 1].Replace(separatorString, listFileSeparator.ToString()).Replace(lineFeed, Environment.NewLine));
+                            else item.SubItems.Add("-");
 
                             item.Tag = "";
 
@@ -394,8 +434,9 @@ namespace WebsiteTracker
                         string status = item.SubItems[ITEM_STATUS].Text.Replace(listFileSeparator.ToString(), separatorString);
                         string changed = item.Tag.ToString();
                         string allowEmptyChecksum = item.SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text.Replace(listFileSeparator.ToString(), separatorString);
+                        string result = item.SubItems[ITEM_RESULT].Text.Replace(listFileSeparator.ToString(), separatorString).Replace(Environment.NewLine, lineFeed).Replace("\n\r", lineFeed).Replace("\r\n", lineFeed).Replace("\n", lineFeed).Replace("\r", lineFeed);
 
-                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + notes + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed + listFileSeparator + allowEmptyChecksum);
+                        sw.WriteLine(name + listFileSeparator + enabled + listFileSeparator + address + listFileSeparator + notes + listFileSeparator + interval + listFileSeparator + start + listFileSeparator + stop + listFileSeparator + checksum + listFileSeparator + lastChecked + listFileSeparator + lastUpdated + listFileSeparator + status + listFileSeparator + changed + listFileSeparator + allowEmptyChecksum + listFileSeparator + result);
                     }
                 }
             }
@@ -765,6 +806,7 @@ namespace WebsiteTracker
                 string start = item.SubItems[ITEM_START].Text;
                 string stop = item.SubItems[ITEM_STOP].Text;
                 string checksum = CheckChanges.GetChecksum(source, start, stop, item.SubItems[ITEM_CHECKSUM].Text, bool.Parse(item.SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text));
+                string result = CheckChanges.GetResult(source, start, stop);
 
                 if (source == "" || source.Substring(0, 7) == "[ERROR]")
                 {
@@ -774,7 +816,7 @@ namespace WebsiteTracker
 
                 else
                 {
-                    Action action = () => CheckItemCompleted(item, checksum, logString);
+                    Action action = () => CheckItemCompleted(item, checksum, result, logString);
                     this.Invoke(action);
                 }
             }
@@ -788,7 +830,7 @@ namespace WebsiteTracker
         /// <param name="item">Item</param>
         /// <param name="checksum">MD5 checksum of page</param>
         /// <param name="logString">String to save to log</param>
-        private void CheckItemCompleted(ListViewItem item, string checksum, string logString)
+        private void CheckItemCompleted(ListViewItem item, string checksum, string result, string logString)
         {
             try
             {
@@ -796,6 +838,7 @@ namespace WebsiteTracker
                 {
                     item.SubItems[ITEM_LASTCHECKED].Text = lastUpdated = DateTime.Now.ToString(dateString);
                     item.SubItems[ITEM_STATUS].Text = "OK";
+                    item.SubItems[ITEM_RESULT].Text = result;
 
                     if (item.SubItems[ITEM_CHECKSUM].Text != "-")
                     {
@@ -1123,6 +1166,7 @@ namespace WebsiteTracker
                 item.SubItems.Add("-");
                 item.SubItems.Add("");
                 item.SubItems.Add(form.ItemAllowEmptyChecksum.ToString());
+                item.SubItems.Add("-");
                 item.Tag = Status.NotUpdated;
 
                 lstItems.Items.Add(item);
@@ -1164,6 +1208,7 @@ namespace WebsiteTracker
                     lstItems.SelectedItems[0].SubItems[ITEM_LASTUPDATED].Text = "-";
                     lstItems.SelectedItems[0].SubItems[ITEM_STATUS].Text = "";
                     lstItems.SelectedItems[0].SubItems[ITEM_ALLOW_EMPTY_CHECKSUM].Text = form.ItemAllowEmptyChecksum.ToString();
+                    lstItems.SelectedItems[0].SubItems[ITEM_RESULT].Text = "-";
                     lstItems.SelectedItems[0].Tag = Status.NotUpdated;
                 }
 
@@ -1256,6 +1301,13 @@ namespace WebsiteTracker
         {
             if (menuItem_RememberColumnSizes.Checked) menuItem_RememberColumnSizes.Checked = false;
             else menuItem_RememberColumnSizes.Checked = true;
+            SaveSettings();
+        }
+
+        private void MenuItem_RememberColumnOrder_Click(object sender, EventArgs e)
+        {
+            if (menuItem_RememberColumnOrder.Checked) menuItem_RememberColumnOrder.Checked = false;
+            else menuItem_RememberColumnOrder.Checked = true;
             SaveSettings();
         }
 
@@ -1476,7 +1528,6 @@ namespace WebsiteTracker
                 //base.OnRenderToolStripBorder(e);
             }
         }
-
 
     }
 }

@@ -61,6 +61,7 @@
             this.numericHours = new System.Windows.Forms.NumericUpDown();
             this.numericDays = new System.Windows.Forms.NumericUpDown();
             this.labelChecksum = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -130,7 +131,7 @@
             this.txtNotes.Name = "txtNotes";
             this.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtNotes.Size = new System.Drawing.Size(669, 49);
-            this.txtNotes.TabIndex = 4;
+            this.txtNotes.TabIndex = 3;
             // 
             // label9
             // 
@@ -186,7 +187,9 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.checkAllowEmptyChecksum);
+            this.groupBox1.Controls.Add(this.txtResult);
             this.groupBox1.Controls.Add(this.btnScrollToHit);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.richTextBox1);
@@ -208,10 +211,10 @@
             this.checkAllowEmptyChecksum.AutoSize = true;
             this.checkAllowEmptyChecksum.Checked = true;
             this.checkAllowEmptyChecksum.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkAllowEmptyChecksum.Location = new System.Drawing.Point(201, 84);
+            this.checkAllowEmptyChecksum.Location = new System.Drawing.Point(622, 113);
             this.checkAllowEmptyChecksum.Name = "checkAllowEmptyChecksum";
             this.checkAllowEmptyChecksum.Size = new System.Drawing.Size(110, 17);
-            this.checkAllowEmptyChecksum.TabIndex = 7;
+            this.checkAllowEmptyChecksum.TabIndex = 6;
             this.checkAllowEmptyChecksum.Text = "Allow empty result";
             this.checkAllowEmptyChecksum.UseVisualStyleBackColor = true;
             // 
@@ -221,7 +224,7 @@
             this.btnScrollToHit.Location = new System.Drawing.Point(622, 80);
             this.btnScrollToHit.Name = "btnScrollToHit";
             this.btnScrollToHit.Size = new System.Drawing.Size(120, 23);
-            this.btnScrollToHit.TabIndex = 6;
+            this.btnScrollToHit.TabIndex = 5;
             this.btnScrollToHit.Text = "Scroll to result";
             this.btnScrollToHit.UseVisualStyleBackColor = true;
             this.btnScrollToHit.Click += new System.EventHandler(this.BtnScrollToHit_Click);
@@ -229,7 +232,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(19, 97);
+            this.label8.Location = new System.Drawing.Point(19, 133);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(70, 13);
             this.label8.TabIndex = 1;
@@ -242,10 +245,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Font = new System.Drawing.Font("Lucida Console", 8.25F);
             this.richTextBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.richTextBox1.Location = new System.Drawing.Point(22, 120);
+            this.richTextBox1.Location = new System.Drawing.Point(22, 149);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(720, 309);
-            this.richTextBox1.TabIndex = 4;
+            this.richTextBox1.Size = new System.Drawing.Size(720, 280);
+            this.richTextBox1.TabIndex = 7;
             this.richTextBox1.Text = "";
             // 
             // btnUseStop
@@ -317,28 +320,29 @@
             this.txtContent.Name = "txtContent";
             this.txtContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtContent.Size = new System.Drawing.Size(213, 57);
-            this.txtContent.TabIndex = 0;
+            this.txtContent.TabIndex = 3;
             this.txtContent.Visible = false;
             this.txtContent.TextChanged += new System.EventHandler(this.control_ValueChanged);
             // 
             // txtResult
             // 
-            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtResult.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtResult.BackColor = System.Drawing.SystemColors.Window;
             this.txtResult.Font = new System.Drawing.Font("Lucida Console", 8.25F);
-            this.txtResult.Location = new System.Drawing.Point(704, 31);
+            this.txtResult.Location = new System.Drawing.Point(201, 82);
             this.txtResult.Multiline = true;
             this.txtResult.Name = "txtResult";
+            this.txtResult.ReadOnly = true;
             this.txtResult.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtResult.Size = new System.Drawing.Size(52, 29);
-            this.txtResult.TabIndex = 0;
-            this.txtResult.Visible = false;
+            this.txtResult.Size = new System.Drawing.Size(415, 45);
+            this.txtResult.TabIndex = 4;
             // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.checkAutomatic);
-            this.groupBox3.Controls.Add(this.txtResult);
             this.groupBox3.Controls.Add(this.txtContent);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.label6);
@@ -402,7 +406,7 @@
             0});
             this.numericMinutes.Name = "numericMinutes";
             this.numericMinutes.Size = new System.Drawing.Size(60, 20);
-            this.numericMinutes.TabIndex = 3;
+            this.numericMinutes.TabIndex = 2;
             this.numericMinutes.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericMinutes.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
@@ -416,7 +420,7 @@
             0});
             this.numericHours.Name = "numericHours";
             this.numericHours.Size = new System.Drawing.Size(60, 20);
-            this.numericHours.TabIndex = 2;
+            this.numericHours.TabIndex = 1;
             this.numericHours.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericHours.Value = new decimal(new int[] {
             2,
@@ -435,7 +439,7 @@
             0});
             this.numericDays.Name = "numericDays";
             this.numericDays.Size = new System.Drawing.Size(60, 20);
-            this.numericDays.TabIndex = 1;
+            this.numericDays.TabIndex = 0;
             this.numericDays.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.numericDays.ValueChanged += new System.EventHandler(this.control_ValueChanged);
             // 
@@ -448,6 +452,15 @@
             this.labelChecksum.Size = new System.Drawing.Size(60, 13);
             this.labelChecksum.TabIndex = 1;
             this.labelChecksum.Text = "Checksum:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(19, 85);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(72, 13);
+            this.label10.TabIndex = 8;
+            this.label10.Text = "Search result:";
             // 
             // FormItem
             // 
@@ -516,5 +529,6 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Button btnScrollToHit;
         private System.Windows.Forms.CheckBox checkAllowEmptyChecksum;
+        private System.Windows.Forms.Label label10;
     }
 }
