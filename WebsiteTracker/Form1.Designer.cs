@@ -54,6 +54,7 @@
             this.menuItem_RememberWindowSize = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberWindowPosition = new System.Windows.Forms.MenuItem();
             this.menuItem_RememberColumnSizes = new System.Windows.Forms.MenuItem();
+            this.menuItem_RememberColumnOrder = new System.Windows.Forms.MenuItem();
             this.menuItem12 = new System.Windows.Forms.MenuItem();
             this.menuItem_ShowNotifications = new System.Windows.Forms.MenuItem();
             this.menuItem8 = new System.Windows.Forms.MenuItem();
@@ -118,7 +119,6 @@
             this.btnClearUpdated = new System.Windows.Forms.ToolStripButton();
             this.btnOpenSelected = new System.Windows.Forms.ToolStripButton();
             this.btnOpenAllUpdatedPages = new System.Windows.Forms.ToolStripButton();
-            this.menuItem_RememberColumnOrder = new System.Windows.Forms.MenuItem();
             this.lstItems = new WebsiteTracker.VisualStylesListView();
             this.clmName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmEnabled = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -334,6 +334,12 @@
             this.menuItem_RememberColumnSizes.Text = "Remember column sizes";
             this.menuItem_RememberColumnSizes.Click += new System.EventHandler(this.menuItem_RememberColumnSizes_Click);
             // 
+            // menuItem_RememberColumnOrder
+            // 
+            this.menuItem_RememberColumnOrder.Index = 3;
+            this.menuItem_RememberColumnOrder.Text = "Remember column order";
+            this.menuItem_RememberColumnOrder.Click += new System.EventHandler(this.MenuItem_RememberColumnOrder_Click);
+            // 
             // menuItem12
             // 
             this.menuItem12.Index = 4;
@@ -461,6 +467,7 @@
             this.menuItem6.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.menuItem_Help});
             this.menuItem6.Text = "Help";
+            this.menuItem6.Visible = false;
             // 
             // menuItem_Help
             // 
@@ -826,12 +833,6 @@
             this.btnOpenAllUpdatedPages.Text = "Open all updated pages";
             this.btnOpenAllUpdatedPages.Click += new System.EventHandler(this.btnOpenAllUpdatedPages_Click);
             // 
-            // menuItem_RememberColumnOrder
-            // 
-            this.menuItem_RememberColumnOrder.Index = 3;
-            this.menuItem_RememberColumnOrder.Text = "Remember column order";
-            this.menuItem_RememberColumnOrder.Click += new System.EventHandler(this.MenuItem_RememberColumnOrder_Click);
-            // 
             // lstItems
             // 
             this.lstItems.AllowColumnReorder = true;
@@ -854,6 +855,7 @@
             this.clmResult});
             this.lstItems.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             this.lstItems.FullRowSelect = true;
+            this.lstItems.HideSelection = false;
             this.lstItems.Location = new System.Drawing.Point(12, 33);
             this.lstItems.MultiSelect = false;
             this.lstItems.Name = "lstItems";
