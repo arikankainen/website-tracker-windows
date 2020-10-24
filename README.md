@@ -5,4 +5,5 @@ Website Trackerilla voidaan tarkkailla kokonaisen nettisivun tai lähdekoodista 
 Artikkeli projektista löytyy:
 https://www.arik.fi/ohjelmat_website_tracker.php
 
-<img src="/docs/wt.png">
+<img src="/docs/wt01.png">
+<img src="/docs/wt02.png">
